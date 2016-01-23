@@ -1,6 +1,8 @@
 package perihelion.io.fourply.nearby;
 
 import android.Manifest;
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
