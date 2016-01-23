@@ -9,6 +9,7 @@ import com.parse.ParseObject;
 
 @ParseClassName("Review")
 public class Review extends ParseObject {
+
     public Review() {}
 
     public Review(String subject, String message, float rating, String parent) {

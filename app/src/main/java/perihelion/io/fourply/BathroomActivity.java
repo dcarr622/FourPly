@@ -10,6 +10,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,8 +34,8 @@ import perihelion.io.fourply.data.Review;
 
 public class BathroomActivity extends AppCompatActivity {
 
-    private String bathroomName = "PennApps Bathroom";
-    private String bathroomID = "E8VjTcnzRu";
+    private String bathroomName;
+    private String bathroomID;
     private RatingBar ratingBar;
     private Bathroom bathroom;
     private TextView ratingText;
@@ -102,6 +103,7 @@ public class BathroomActivity extends AppCompatActivity {
             public void done(List<Review> reviews, ParseException e) {
                 if (e == null) {
                     reviewsList.removeAllViews();
+                    Log.d("REVIEWs", "found : " + reviews.size());
                     float numRolls = 0.0f;
                     for (Review review : reviews) {
                         numRolls += review.getRating();

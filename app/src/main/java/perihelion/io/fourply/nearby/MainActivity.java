@@ -10,9 +10,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private CoordinatorLayout mLayout;
     private GoogleApiClient mGoogleApiClient;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private Map<Marker, Bathroom> mBathroomMarkers = new HashMap<>();
 
     @Override
@@ -53,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLayout = (CoordinatorLayout) findViewById(R.id.main_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mListView = (ListView) findViewById(R.id.bathroom_list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.bathroom_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -102,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
         bathrooms.findInBackground(new FindCallback<Bathroom>() {
             public void done(List<Bathroom> bathrooms, ParseException exception) {
-                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, bathrooms);
-                mListView.setAdapter(adapter);
+                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, mRecyclerView, bathrooms);
+                mRecyclerView.setAdapter(adapter);
                 for (Bathroom bathroom: bathrooms) {
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
@@ -158,8 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (lastLocation != null) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 16));
-            } else {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 18));
             }
         } catch (SecurityException e) {
             e.printStackTrace();
