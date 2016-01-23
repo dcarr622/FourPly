@@ -100,5 +100,4 @@
             android:id="@+id/reviews_list"/>
 
     </RelativeLayout>
-
 </android.support.v4.widget.NestedScrollView>

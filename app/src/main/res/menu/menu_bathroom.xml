@@ -4,7 +4,7 @@
     tools:context="perihelion.io.fourply.BathroomActivity">
     <item
         android:id="@+id/chatbutton"
-        android:icon="@android:drawable/stat_notify_chat"
+        android:icon="@drawable/ic_message_white_36dp"
         android:title="@string/chat"
         app:showAsAction="always|withText"></item>
 </menu>
