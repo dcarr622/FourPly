@@ -9,4 +9,18 @@ import com.parse.ParseObject;
 
 @ParseClassName("Review")
 public class Review extends ParseObject {
+    public Review() {}
+
+    public int getRolls() {
+        return getInt("rolls");
+    }
+
+    public String getName() {
+        return getString("name");
+    }
+
+    public String getText() {
+        return getString("text");
+    }
+
 }

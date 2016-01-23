@@ -8,10 +8,12 @@
     tools:context="perihelion.io.fourply.BathroomActivity"
     tools:showIn="@layout/bathroom_layout">
 
-    <TextView
+    <RatingBar
+        android:id="@+id/num_rolls_bar"
+        style="@style/rollrating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+        android:numStars="5"
+        android:stepSize="1"/>
 
 </android.support.v4.widget.NestedScrollView>
