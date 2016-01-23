@@ -99,4 +99,5 @@
     <string name="chat">Chat</string>
     <string name="ratingunit">%.1f Rolls</string>
     <string name="no_chat">No users have started chatting here!\nWhy not be the first?</string>
+    <string name="chat_hint">Enter a message to chat</string>
 </resources>

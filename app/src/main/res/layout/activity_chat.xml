@@ -30,9 +30,12 @@
 
     <TextView
         android:id="@android:id/empty"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:text="@string/no_chat" />
+        android:layout_marginTop="?attr/actionBarSize"
+        android:text="@string/no_chat"
+        android:layout_width="wrap_content"
+        android:textAlignment="center"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:id="@+id/listFooter"
@@ -46,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:hint="@string/chat_hint"
             android:inputType="textShortMessage"
             android:lines="1"
             android:singleLine="true" />
@@ -54,6 +58,7 @@
             android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tint="@color/fourply_logo_pink"
             android:background="@null"
             android:src="@drawable/ic_send_black_36dp" />
     </LinearLayout>
