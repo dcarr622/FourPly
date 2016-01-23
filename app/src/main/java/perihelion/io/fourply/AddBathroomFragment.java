@@ -3,10 +3,8 @@ package perihelion.io.fourply;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,8 +21,6 @@ public class AddBathroomFragment extends DialogFragment implements View.OnClickL
     private String id;
     private String image;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-
     public static AddBathroomFragment createInstance(){
         AddBathroomFragment fragment = new AddBathroomFragment();
         return fragment;
@@ -38,14 +34,6 @@ public class AddBathroomFragment extends DialogFragment implements View.OnClickL
         Bundle args = getArguments();
         id = args.getString("id");
         image = args.getString("image");
-
-        ImageView add = (ImageView) getView().findViewById(R.id.addbanner);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dispatchTakePictureIntent();
-            }
-        });
     }
 
     @Nullable
@@ -74,12 +62,4 @@ public class AddBathroomFragment extends DialogFragment implements View.OnClickL
                 break;
         }
     }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
 }
