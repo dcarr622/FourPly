@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         bathrooms.findInBackground(new FindCallback<Bathroom>() {
             public void done(List<Bathroom> bathrooms, ParseException exception) {
                 BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, bathrooms);
-//                mListView.setAdapter(adapter);
+                mListView.setAdapter(adapter);
             }
         });
     }

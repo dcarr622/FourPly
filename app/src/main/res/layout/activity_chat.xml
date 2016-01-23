@@ -28,6 +28,12 @@
         android:layout_alignParentTop="true"
         android:transcriptMode="alwaysScroll" />
 
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_chat" />
+
     <LinearLayout
         android:id="@+id/listFooter"
         android:layout_width="fill_parent"
