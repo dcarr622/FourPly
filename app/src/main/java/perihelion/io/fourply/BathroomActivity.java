@@ -1,10 +1,11 @@
 package perihelion.io.fourply;
 
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,9 +30,10 @@ import perihelion.io.fourply.data.Review;
 
 public class BathroomActivity extends AppCompatActivity {
 
-    String bathroomName = "PennApps Bathroom";
-    String bathroomID = "E8VjTcnzRu";
-    float numRolls = 3.7f;
+    private String bathroomName = "PennApps Bathroom";
+    private String bathroomID = "E8VjTcnzRu";
+    private float numRolls = 3.7f;
+    private Bathroom bathroom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,21 +53,13 @@ public class BathroomActivity extends AppCompatActivity {
         CollapsingToolbarLayout layout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         layout.setTitle(bathroomName);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
         bathrooms.getInBackground(bathroomID, new GetCallback<Bathroom>() {
             @Override
             public void done(Bathroom object, ParseException e) {
-                ImageView hero = (ImageView) findViewById(R.id.heroImage);
-                Picasso.with(BathroomActivity.this).load(object.getHeroImage()).into(hero);
+                bathroom = object;
+                setupView();
             }
         });
 
@@ -97,6 +91,25 @@ public class BathroomActivity extends AppCompatActivity {
                 startActivity(postmatesIntent);
             }
         });
+    }
+
+    private void setupView(){
+        //Setup Hero Image
+        ImageView hero = (ImageView) findViewById(R.id.heroImage);
+        Picasso.with(BathroomActivity.this).load(bathroom.getHeroImage()).into(hero);
+
+        //Setup the Fab
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment dialogFragment = ReviewFragment.createInstance(bathroom);
+                FragmentTransaction manager = getFragmentManager().beginTransaction();
+                manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                dialogFragment.show(manager, "Review");
+            }
+        });
+
     }
 
     @Override
