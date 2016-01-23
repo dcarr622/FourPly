@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import perihelion.io.fourply.ARGraffitiActivity;
 import perihelion.io.fourply.BathroomActivity;
 import perihelion.io.fourply.R;
 import perihelion.io.fourply.data.Bathroom;
@@ -113,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+
+        startActivity(new Intent(this, ARGraffitiActivity.class));
     }
 
     protected void onStart() {

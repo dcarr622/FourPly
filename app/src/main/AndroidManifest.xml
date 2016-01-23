@@ -63,6 +63,8 @@
             android:exported="true" />
         <activity
             android:name=".ARGraffitiActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
     </application>
 

@@ -1,16 +1,23 @@
 package perihelion.io.fourply;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
+import org.opencv.core.CvException;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -34,6 +41,7 @@ import java.util.List;
 public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     private static final String TAG = "ARGraffiti";
+    private static final int PERMISSION_REQUEST_CAMERA = 42;
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -41,24 +49,41 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         }
     }
 
-    private CameraBridgeViewBase mOpenCvCameraView;
+    private CameraBridgeViewBase mOpenCvCameraView = null;
+
+    private Mat overlay = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_graffiti);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Mat m = null;
-        Mat overlay = null;
         try {
             m = Utils.loadResource(this, R.drawable.stall);
             overlay = Utils.loadResource(this, R.drawable.graffiti);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        processMat(m, overlay);
-//        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
-//        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-//        mOpenCvCameraView.setCvCameraViewListener(this);
+        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.camera);
+        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        mOpenCvCameraView.setCvCameraViewListener(this);
+    }
+
+    public void onResume() {
+        super.onResume();
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PERMISSION_REQUEST_CAMERA);
+        } else {
+            mOpenCvCameraView.enableView();
+        }
     }
 
     public void onPause() {
@@ -74,6 +99,23 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mOpenCvCameraView.enableView();
+                } else {
+                    Toast.makeText(this, "Camera permission not granted", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+        }
+    }
+
+    @Override
     public void onCameraViewStarted(int width, int height) {
     }
 
@@ -83,7 +125,8 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        return inputFrame.rgba();
+        Mat input = inputFrame.rgba();
+        return this.processMat(input);
     }
 
     private static Point pointOnLineRaw(double rho, double theta, double distance) {
@@ -187,7 +230,7 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         return corners.get(0);
     }
 
-    private void processMat(Mat m, Mat overlay) {
+    private Mat processMat(Mat m) {
         Mat gray = new Mat(m.rows(), m.cols(), CvType.CV_8UC1);
         Imgproc.cvtColor(m, gray, Imgproc.COLOR_RGB2GRAY);
         Mat blur = new Mat();
@@ -197,7 +240,7 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         Imgproc.Canny(blur, canny, threshold, threshold * 3, 3, true);
 
         Mat houghLines = new Mat();
-        Imgproc.HoughLines(canny, houghLines, 1, Math.PI / 180, 200);
+        Imgproc.HoughLines(canny, houghLines, 1, Math.PI / 180, 100);
 
         List<double[]> horizontalLines = new LinkedList<>();
         List<double[]> verticalLines = new LinkedList<>();
@@ -217,10 +260,10 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         }
 
         for (double[] horizontal : horizontalLines) {
-//            Imgproc.line(m, pointOnLineRaw(horizontal[0], horizontal[1], 1000), pointOnLineRaw(horizontal[0], horizontal[1], -1000), new Scalar(0, 0, 255), 1);
+            Imgproc.line(m, pointOnLineRaw(horizontal[0], horizontal[1], 1000), pointOnLineRaw(horizontal[0], horizontal[1], -1000), new Scalar(0, 0, 255), 1);
         }
         for (double[] vertical : verticalLines) {
-//            Imgproc.line(m, pointOnLineRaw(vertical[0], vertical[1], 1000), pointOnLineRaw(vertical[0], vertical[1], -1000), new Scalar(0, 0, 255), 1);
+            Imgproc.line(m, pointOnLineRaw(vertical[0], vertical[1], 1000), pointOnLineRaw(vertical[0], vertical[1], -1000), new Scalar(0, 0, 255), 1);
         }
 
         List<Corner> corners = findCorners(horizontalLines, verticalLines, m.cols(), m.rows());
@@ -241,23 +284,20 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             Mat warp = Imgproc.getPerspectiveTransform(from, to);
             Mat warpedOverlay = new Mat();
             Imgproc.warpPerspective(overlay, warpedOverlay, warp, m.size());
-            Mat warpedOverlay3Channel = new Mat();
-            Imgproc.cvtColor(warpedOverlay, warpedOverlay3Channel, Imgproc.COLOR_RGBA2BGR);
-            Core.add(m, warpedOverlay3Channel, m);
+            try {
+                Core.add(m, warpedOverlay, m);
+            } catch (CvException ex) {
+                Log.e(TAG, "Couldn't add images");
+            }
 
-//            Imgproc.circle(m, topLeft.p, 5, new Scalar(255, 0, 0), -1);
-//            Imgproc.circle(m, topRight.p, 5, new Scalar(0, 255, 0), -1);
-//            Imgproc.circle(m, bottomLeft, 5, new Scalar(0, 0, 255), -1);
-//            Imgproc.circle(m, bottomRight, 5, new Scalar(255, 255, 0), -1);
-
-            ImageView imageView = (ImageView) findViewById(R.id.image);
-            Bitmap bm = Bitmap.createBitmap(m.cols(), m.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(m, bm);
-            imageView.setImageBitmap(bm);
+            Imgproc.circle(m, topLeft.p, 5, new Scalar(255, 0, 0), -1);
+            Imgproc.circle(m, topRight.p, 5, new Scalar(0, 255, 0), -1);
+            Imgproc.circle(m, bottomLeft, 5, new Scalar(0, 0, 255), -1);
+            Imgproc.circle(m, bottomRight, 5, new Scalar(255, 255, 0), -1);
         } else {
             Log.w(TAG, "Unable to find corners");
         }
-
+        return m;
     }
 
 }
