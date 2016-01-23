@@ -57,7 +57,7 @@
             android:exported="true"
             android:label="@string/title_activity_bathroom"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".chat.ChatActivity"
             android:exported="true" />
@@ -66,6 +66,9 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".PostmatesActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

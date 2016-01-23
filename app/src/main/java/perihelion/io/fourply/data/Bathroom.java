@@ -31,4 +31,8 @@ public class Bathroom extends ParseObject {
     public double getLng() {
         return getDouble("lng");
     }
+
+    public float getAverageReview() {
+        return (float) getDouble("averageReview");
+    }
 }

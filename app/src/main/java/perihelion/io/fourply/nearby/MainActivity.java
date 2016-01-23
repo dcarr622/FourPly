@@ -6,13 +6,17 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import perihelion.io.fourply.ARGraffitiActivity;
+import perihelion.io.fourply.AddBathroomFragment;
 import perihelion.io.fourply.BathroomActivity;
 import perihelion.io.fourply.R;
 import perihelion.io.fourply.data.Bathroom;
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private CoordinatorLayout mLayout;
     private GoogleApiClient mGoogleApiClient;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private Map<Marker, Bathroom> mBathroomMarkers = new HashMap<>();
 
     @Override
@@ -54,16 +58,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLayout = (CoordinatorLayout) findViewById(R.id.main_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mListView = (ListView) findViewById(R.id.bathroom_list);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        mRecyclerView = (RecyclerView) findViewById(R.id.bathroom_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerViewHeader header = RecyclerViewHeader.fromXml(this, R.nearby_header);
+        header.attachTo(recyclerView);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -103,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
         bathrooms.findInBackground(new FindCallback<Bathroom>() {
             public void done(List<Bathroom> bathrooms, ParseException exception) {
-                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, bathrooms);
-                mListView.setAdapter(adapter);
+                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, mRecyclerView, bathrooms);
+                mRecyclerView.setAdapter(adapter);
                 for (Bathroom bathroom: bathrooms) {
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
@@ -114,6 +112,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
+        behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+            @Override
+            public boolean canDrag(AppBarLayout appBarLayout) {
+                return false;
+            }
+        });
+        params.setBehavior(behavior);
     }
 
     protected void onStart() {
@@ -132,6 +141,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setBuildingsEnabled(true);
         mMap.setIndoorEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            int pad = (int) (TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics()) / 2.5);
+            mMap.setPadding(0, pad, 0, pad);
+        }
         try {
             mMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
@@ -159,8 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (lastLocation != null) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 16));
-            } else {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 18));
             }
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -190,4 +204,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         bathroomIntent.putExtra("id", bathroom.getObjectId());
         startActivity(bathroomIntent);
     }
+
+    private void setupView(){
+        //Setup the Fab
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment dialogFragment = AddBathroomFragment.createInstance();
+                FragmentTransaction manager = getFragmentManager().beginTransaction();
+                manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                dialogFragment.show(manager, "Review");
+            }
+        });
+
+    }
+
 }
