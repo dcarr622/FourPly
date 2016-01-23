@@ -107,4 +107,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_bathroom_fragment">Hello blank fragment</string>
     <string name="review_saved">Your review has been submitted!</string>
+    <string name="nearby_bathrooms">Nearby Bathrooms</string>
 </resources>
