@@ -104,4 +104,7 @@
     <string name="emergency">EMERGENCY</string>
     <string name="leave_rating">LEAVE RATING</string>
     <string name="on_the_way">Your order is on the way!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
