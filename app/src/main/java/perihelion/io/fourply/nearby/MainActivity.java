@@ -114,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-
-        startActivity(new Intent(this, ARGraffitiActivity.class));
     }
 
     protected void onStart() {
