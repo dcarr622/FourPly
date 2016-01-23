@@ -21,6 +21,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -62,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         mRecyclerView = (RecyclerView) findViewById(R.id.bathroom_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerViewHeader header = RecyclerViewHeader.fromXml(this, R.nearby_header);
-        header.attachTo(recyclerView);
+        RecyclerViewHeader header = RecyclerViewHeader.fromXml(this, R.layout.nearby_header);
+        header.attachTo(mRecyclerView);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
