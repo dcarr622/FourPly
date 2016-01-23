@@ -144,8 +144,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TypedValue tv = new TypedValue();
         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
         {
-            int pad = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-            mMap.setPadding(0, pad/2, 0, pad/2);
+            int pad = (int) (TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics()) / 2.5);
+            mMap.setPadding(0, pad, 0, pad);
         }
         try {
             mMap.setMyLocationEnabled(true);
