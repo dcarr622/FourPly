@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -27,8 +28,8 @@ import perihelion.io.fourply.R;
 
 public class ChatActivity extends ListActivity {
 
-    private static final String FIREBASE_URL = "https://fourply.firebaseio.com/";
     private static final String TAG = "ChatActivity";
+    private String mFirebaseURL;
     private String mUsername;
     private String mProfImage;
     private Firebase mFirebaseRef;
@@ -43,10 +44,13 @@ public class ChatActivity extends ListActivity {
         // Make sure we have a mUsername
         setupUsername();
 
-        setTitle("Chatting as " + mUsername);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setActionBar(toolbar);
+        toolbar.setTitle(getIntent().getStringExtra("name"));
 
         // Setup our Firebase mFirebaseRef
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("chat");
+        mFirebaseURL = "https://fourply.firebaseio.com/" + getIntent().getStringExtra("id");
+        mFirebaseRef = new Firebase(mFirebaseURL).child("chat");
 
         // Setup our input methods. Enter key on the keyboard or pushing the send button
         EditText inputText = (EditText) findViewById(R.id.messageInput);
