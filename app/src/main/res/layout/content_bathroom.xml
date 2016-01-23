@@ -50,10 +50,21 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/description"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:layout_below="@id/ratingsLayout"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="32dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ratingsLayout"
+            android:id="@+id/buttonsLayout"
+            android:layout_below="@id/description"
             android:orientation="horizontal">
 
             <TextView
@@ -63,7 +74,7 @@
                 android:clickable="true"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:paddingLeft="16dp"
+                android:paddingLeft="32dp"
                 android:paddingRight="16dp"
                 android:text="@string/leave_rating"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -90,6 +101,13 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@id/buttonsLayout"
+            android:layout_height="wrap_content"
+            android:id="@+id/reviews_list"/>
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
