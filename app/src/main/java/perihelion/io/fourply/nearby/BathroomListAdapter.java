@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -59,7 +60,8 @@ public class BathroomListAdapter extends BaseAdapter {
         final Bathroom bathroom = mBathrooms.get(position);
         holder.name.setText(bathroom.getName());
         holder.description.setText(bathroom.getDescription());
-        Picasso.with(mActivity).load(bathroom.getHeroImage()).into(holder.heroImage);
+        holder.rating.setRating(bathroom.getAverageReview());
+        Picasso.with(mActivity).load(bathroom.getHeroImage()).fit().into(holder.heroImage);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,11 +79,13 @@ public class BathroomListAdapter extends BaseAdapter {
         TextView name;
         TextView description;
         ImageView heroImage;
+        RatingBar rating;
 
         public ViewHolder(View view) {
             name = (TextView) view.findViewById(R.id.name);
             description = (TextView) view.findViewById(R.id.description);
             heroImage = (ImageView) view.findViewById(R.id.heroImage);
+            rating = (RatingBar) view.findViewById(R.id.tiny_rolls_bar);
         }
     }
 }

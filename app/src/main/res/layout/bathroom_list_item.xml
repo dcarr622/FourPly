@@ -33,7 +33,7 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
@@ -43,6 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
+                        android:layout_alignParentLeft="true"
                         android:ellipsize="end"
                         android:fontFamily="sans-serif"
                         android:singleLine="true"
@@ -53,8 +54,9 @@
                     <RatingBar
                         android:id="@+id/tiny_rolls_bar"
                         style="@style/rollrating"
-                        android:layout_marginTop="-10dp"
-                        android:layout_marginRight="-20dp"
+                        android:layout_marginTop="-9dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="-60dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:numStars="5"
@@ -63,7 +65,7 @@
                         android:scaleX=".44"
                         android:scaleY=".44"/>
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/description"

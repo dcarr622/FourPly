@@ -189,4 +189,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         bathroomIntent.putExtra("id", bathroom.getObjectId());
         startActivity(bathroomIntent);
     }
+
 }
