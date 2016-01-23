@@ -19,6 +19,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 dependencies {
@@ -28,5 +36,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.parse:parse-android:1.12.0'
     compile 'com.android.support:design:23.1.1'
+    compile 'com.firebase:firebase-client-android:2.5.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+//    compile 'com.squareup.okhttp3:okhttp:3.0.1'
+//    compile 'com.squareup.okio:okio:1.6.0'
 }
