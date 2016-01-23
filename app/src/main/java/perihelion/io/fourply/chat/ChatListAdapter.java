@@ -1,7 +1,6 @@
 package perihelion.io.fourply.chat;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,6 +9,7 @@ import com.firebase.client.Query;
 import com.squareup.picasso.Picasso;
 
 import perihelion.io.fourply.R;
+import perihelion.io.fourply.util.CircularTransformation;
 
 /**
  * @author greg
@@ -23,11 +23,13 @@ public class ChatListAdapter extends FirebaseListAdapter<Chat> {
     // The mUsername for this client. We use this to indicate which messages originated from this user
     private String mUsername;
     private Activity mActivity;
+    private CircularTransformation circularTransformation;
 
     public ChatListAdapter(Query ref, Activity activity, int layout, String mUsername) {
         super(ref, Chat.class, layout, activity);
         this.mUsername = mUsername;
         this.mActivity = activity;
+        circularTransformation = new CircularTransformation((int) (32 * (mActivity.getResources().getDisplayMetrics().density)), false);
     }
 
     /**
@@ -46,11 +48,11 @@ public class ChatListAdapter extends FirebaseListAdapter<Chat> {
         authorText.setText(author + ": ");
         // If the message was sent by this user, color it differently
         if (author != null && author.equals(mUsername)) {
-            authorText.setTextColor(Color.RED);
+            authorText.setTextColor(view.getContext().getResources().getColor(R.color.fourply_logo_pink));
         } else {
-            authorText.setTextColor(Color.BLUE);
+            authorText.setTextColor(view.getContext().getResources().getColor(R.color.blue_500));
         }
         ((TextView) view.findViewById(R.id.message)).setText(chat.getMessage());
-        Picasso.with(mActivity).load(chat.getProfileImage()).into((ImageView) view.findViewById(R.id.prof_pic));
+        Picasso.with(mActivity).load(chat.getProfileImage()).transform(circularTransformation).into((ImageView) view.findViewById(R.id.prof_pic));
     }
 }

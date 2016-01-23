@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="fourply_logo_pink">#FF3D71</color>
     <color name="cyan">#4cb4e4</color>
     <color name="bkg">#eeeeee</color>
     <color name="frag_bkg_white">#f1f1f1</color>

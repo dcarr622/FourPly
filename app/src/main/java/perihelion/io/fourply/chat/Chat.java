@@ -9,7 +9,7 @@ public class Chat {
     private String message;
     private String author;
     private String time;
-    private String img;
+    private String profileImage;
 
     // Required default constructor for Firebase object mapping
     @SuppressWarnings("unused")
@@ -20,7 +20,7 @@ public class Chat {
         this.message = message;
         this.author = author;
         this.time = time;
-        this.img = profImg;
+        this.profileImage = profImg;
     }
 
     public String getMessage() {
@@ -36,6 +36,6 @@ public class Chat {
     }
 
     public String getProfileImage() {
-        return img;
+        return profileImage;
     }
 }

@@ -10,13 +10,15 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Random;
@@ -26,7 +28,7 @@ import perihelion.io.fourply.R;
 public class ChatActivity extends ListActivity {
 
     private static final String FIREBASE_URL = "https://fourply.firebaseio.com/";
-
+    private static final String TAG = "ChatActivity";
     private String mUsername;
     private String mProfImage;
     private Firebase mFirebaseRef;
@@ -88,11 +90,6 @@ public class ChatActivity extends ListActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 boolean connected = (Boolean) dataSnapshot.getValue();
-                if (connected) {
-                    Toast.makeText(ChatActivity.this, "Connected to Firebase", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ChatActivity.this, "Disconnected from Firebase", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
@@ -112,15 +109,13 @@ public class ChatActivity extends ListActivity {
     private void setupUsername() {
         SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
         mUsername = prefs.getString("username", null);
-        mProfImage = prefs.getString("profimage", null);
         if (mUsername == null) {
             Random r = new Random();
             // Assign a random user name if we don't have one saved.
             mUsername = "FourPly User " + r.nextInt(100000);
             prefs.edit().putString("username", mUsername).commit();
-            mProfImage = "http://www.gravatar.com/avatar/" + mUsername;
-            prefs.edit().putString("profimage", mProfImage);
         }
+        mProfImage = "http://www.gravatar.com/avatar/" + getMd5(mUsername) + "?d=identicon";
     }
 
     private void sendMessage() {
@@ -134,5 +129,16 @@ public class ChatActivity extends ListActivity {
             mFirebaseRef.push().setValue(chat);
             inputText.setText("");
         }
+    }
+
+    private String getMd5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] md5sum = md.digest(input.getBytes());
+            return String.format("%032X", new BigInteger(1, md5sum));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
