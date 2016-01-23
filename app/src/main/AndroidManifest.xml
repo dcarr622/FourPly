@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="perihelion.io.fourply">
+    package="perihelion.io.fourply" >
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,10 +12,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBOwMa12g6elPHk3GsRmQYR5JO3x8MmvZQ"/>
+            android:value="AIzaSyBOwMa12g6elPHk3GsRmQYR5JO3x8MmvZQ" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -28,17 +28,16 @@
 
         <activity
             android:name=".nearby.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".chat.ChatActivity"
-            android:exported="true"/>
-
+        <activity
+            android:name=".chat.ChatActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
