@@ -12,7 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -21,13 +23,17 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
+import perihelion.io.fourply.data.Review;
 
 public class BathroomActivity extends AppCompatActivity {
 
-    String bathroomName;
-    String bathroomID;
+    String bathroomName = "PennApps Bathroom";
+    String bathroomID = "E8VjTcnzRu";
+    float numRolls = 3.7f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +44,9 @@ public class BathroomActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            bathroomName = extras.getString("name");
-            bathroomID = extras.getString("id");
+            //bathroomName = extras.getString("name");
+            //bathroomID = extras.getString("id");
         }
-
-
 
         CollapsingToolbarLayout layout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         layout.setTitle(bathroomName);
@@ -65,11 +69,28 @@ public class BathroomActivity extends AppCompatActivity {
             @Override
             public void done(Bathroom object, ParseException e) {
                 ImageView hero = (ImageView) findViewById(R.id.bathroom_hero);
-                //Picasso.with(BathroomActivity.this).load(object.getHeroImage()).into(hero);
+                Picasso.with(BathroomActivity.this).load(object.getHeroImage()).into(hero);
 
 
             }
         });
+
+        ParseQuery<Review> reviews = ParseQuery.getQuery(Review.class);
+        reviews.whereEqualTo("parent", bathroomID);
+        reviews.findInBackground(new FindCallback<Review>() {
+            @Override
+            public void done(List<Review> objects, ParseException e) {
+                if (e == null) {
+                    for (Review review : objects) {
+                        numRolls += review.getRolls();
+                    }
+                    numRolls /= objects.size();
+                }
+            }
+        });
+
+        RatingBar rolls = (RatingBar) findViewById(R.id.num_rolls_bar);
+        rolls.setRating(numRolls);
 
     }
 
