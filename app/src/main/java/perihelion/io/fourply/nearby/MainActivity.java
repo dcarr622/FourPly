@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
@@ -111,7 +113,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
+        behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+            @Override
+            public boolean canDrag(AppBarLayout appBarLayout) {
+                return false;
+            }
+        });
+        params.setBehavior(behavior);
     }
 
     protected void onStart() {
@@ -130,6 +141,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setBuildingsEnabled(true);
         mMap.setIndoorEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            int pad = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+            mMap.setPadding(0, pad/2, 0, pad/2);
+        }
         try {
             mMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
