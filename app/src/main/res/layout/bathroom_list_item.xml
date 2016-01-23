@@ -55,6 +55,7 @@
                         android:id="@+id/tiny_rolls_bar"
                         style="@style/rollrating"
                         android:layout_marginTop="-9dp"
+                        android:layout_marginBottom="-9dp"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="-60dp"
                         android:layout_width="wrap_content"

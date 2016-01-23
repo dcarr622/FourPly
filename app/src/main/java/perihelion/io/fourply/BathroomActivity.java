@@ -88,6 +88,15 @@ public class BathroomActivity extends AppCompatActivity {
 
         TextView rollamt = (TextView) findViewById(R.id.rollquantity);
         rollamt.setText(String.format(getString(R.string.ratingunit), numRolls));
+
+        TextView emergency = (TextView) findViewById(R.id.emergencyButton);
+        emergency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent postmatesIntent = new Intent(BathroomActivity.this, PostmatesActivity.class);
+                startActivity(postmatesIntent);
+            }
+        });
     }
 
     @Override
