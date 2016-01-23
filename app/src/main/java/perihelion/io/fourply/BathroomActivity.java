@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -85,6 +86,8 @@ public class BathroomActivity extends AppCompatActivity {
         RatingBar rolls = (RatingBar) findViewById(R.id.num_rolls_bar);
         rolls.setRating(numRolls);
 
+        TextView rollamt = (TextView) findViewById(R.id.rollquantity);
+        rollamt.setText(String.format(getString(R.string.ratingunit), numRolls));
     }
 
     @Override
