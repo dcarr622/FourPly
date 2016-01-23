@@ -53,6 +53,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/buttonsLayout"
             android:layout_below="@id/ratingsLayout"
             android:orientation="horizontal">
 
@@ -63,7 +64,7 @@
                 android:clickable="true"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:paddingLeft="16dp"
+                android:paddingLeft="32dp"
                 android:paddingRight="16dp"
                 android:text="@string/leave_rating"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -90,6 +91,13 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@id/buttonsLayout"
+            android:layout_height="wrap_content"
+            android:id="@+id/reviews_list"/>
 
     </RelativeLayout>
 

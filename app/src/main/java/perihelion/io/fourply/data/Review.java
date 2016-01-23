@@ -11,16 +11,27 @@ import com.parse.ParseObject;
 public class Review extends ParseObject {
     public Review() {}
 
-    public int getRolls() {
-        return getInt("rolls");
+    public Review(String subject, String message, float rating, String parent) {
+        put("subject", subject);
+        put("message", message);
+        put("rating", rating);
+        put("parent", parent);
     }
 
-    public String getName() {
-        return getString("name");
+    public int getRating() {
+        return getInt("rating");
     }
 
-    public String getText() {
-        return getString("text");
+    public String getSubject() {
+        return getString("subject");
+    }
+
+    public String getMessage() {
+        return getString("message");
+    }
+
+    public String getParent() {
+        return getString("parent");
     }
 
 }

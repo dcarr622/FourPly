@@ -104,4 +104,5 @@
     <string name="emergency">EMERGENCY</string>
     <string name="leave_rating">LEAVE RATING</string>
     <string name="on_the_way">Your order is on the way!</string>
+    <string name="review_saved">Your review has been submitted!</string>
 </resources>
