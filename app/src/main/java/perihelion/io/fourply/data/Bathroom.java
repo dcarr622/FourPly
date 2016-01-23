@@ -24,11 +24,11 @@ public class Bathroom extends ParseObject {
         return getString("description");
     }
 
-    public String getLat() {
-        return getString("lat");
+    public double getLat() {
+        return getDouble("lat");
     }
 
-    public String getLng() {
-        return getString("lng");
+    public double getLng() {
+        return getDouble("lng");
     }
 }

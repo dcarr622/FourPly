@@ -1,6 +1,7 @@
 package perihelion.io.fourply.nearby;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -21,22 +22,29 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import perihelion.io.fourply.BathroomActivity;
 import perihelion.io.fourply.R;
 import perihelion.io.fourply.data.Bathroom;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private CoordinatorLayout mLayout;
     private GoogleApiClient mGoogleApiClient;
     private ListView mListView;
+    private Map<Marker, Bathroom> mBathroomMarkers = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +104,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void done(List<Bathroom> bathrooms, ParseException exception) {
                 BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, bathrooms);
                 mListView.setAdapter(adapter);
+                for (Bathroom bathroom: bathrooms) {
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
+                            .title(bathroom.getName())
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                    mBathroomMarkers.put(marker, bathroom);
+                }
             }
         });
     }
@@ -115,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.setBuildingsEnabled(true);
         mMap.setIndoorEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);
         try {
             mMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
@@ -163,5 +179,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Bathroom bathroom = mBathroomMarkers.get(marker);
+        Intent bathroomIntent = new Intent(this, BathroomActivity.class);
+        bathroomIntent.putExtra("name", bathroom.getName());
+        bathroomIntent.putExtra("id", bathroom.getObjectId());
+        startActivity(bathroomIntent);
     }
 }
