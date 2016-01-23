@@ -17,11 +17,8 @@ import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -42,19 +39,17 @@ public class BathroomActivity extends AppCompatActivity {
         setContentView(R.layout.bathroom_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            //bathroomName = extras.getString("name");
-            //bathroomID = extras.getString("id");
+            bathroomName = extras.getString("name");
+            bathroomID = extras.getString("id");
         }
 
         CollapsingToolbarLayout layout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         layout.setTitle(bathroomName);
-
-//        Parse.enableLocalDatastore(this);
-//        ParseUser.enableAutomaticUser();
-//        ParseInstallation.getCurrentInstallation().saveInBackground();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -69,10 +64,8 @@ public class BathroomActivity extends AppCompatActivity {
         bathrooms.getInBackground(bathroomID, new GetCallback<Bathroom>() {
             @Override
             public void done(Bathroom object, ParseException e) {
-                ImageView hero = (ImageView) findViewById(R.id.bathroom_hero);
+                ImageView hero = (ImageView) findViewById(R.id.heroImage);
                 Picasso.with(BathroomActivity.this).load(object.getHeroImage()).into(hero);
-
-
             }
         });
 
@@ -107,6 +100,10 @@ public class BathroomActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
             case R.id.chatbutton:
                 Intent chatIntent = new Intent(this, ChatActivity.class);
                 chatIntent.putExtra("id", bathroomID);
@@ -118,7 +115,6 @@ public class BathroomActivity extends AppCompatActivity {
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 }

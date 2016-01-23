@@ -5,11 +5,13 @@ import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -27,8 +29,8 @@ import perihelion.io.fourply.R;
 
 public class ChatActivity extends ListActivity {
 
-    private static final String FIREBASE_URL = "https://fourply.firebaseio.com/";
     private static final String TAG = "ChatActivity";
+    private String mFirebaseURL;
     private String mUsername;
     private String mProfImage;
     private Firebase mFirebaseRef;
@@ -43,10 +45,17 @@ public class ChatActivity extends ListActivity {
         // Make sure we have a mUsername
         setupUsername();
 
-        setTitle("Chatting as " + mUsername);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setActionBar(toolbar);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 
-        // Setup our Firebase mFirebaseRef
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("chat");
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            setTitle(getIntent().getStringExtra("name"));
+            mFirebaseURL = "https://fourply.firebaseio.com/" + getIntent().getStringExtra("id");
+            mFirebaseRef = new Firebase(mFirebaseURL).child("chat");;
+        }
 
         // Setup our input methods. Enter key on the keyboard or pushing the send button
         EditText inputText = (EditText) findViewById(R.id.messageInput);
@@ -104,6 +113,20 @@ public class ChatActivity extends ListActivity {
         super.onStop();
         mFirebaseRef.getRoot().child(".info/connected").removeEventListener(mConnectedListener);
         mChatListAdapter.cleanup();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setupUsername() {

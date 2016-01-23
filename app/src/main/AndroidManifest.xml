@@ -28,6 +28,7 @@
 
         <activity
             android:name=".nearby.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,6 +39,7 @@
         <activity
             android:name=".BathroomActivity"
             android:label="@string/title_activity_bathroom"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true">
         </activity>

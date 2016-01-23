@@ -98,4 +98,5 @@
     <string name="action_settings">Settings</string>
     <string name="chat">Chat</string>
     <string name="ratingunit">%.1f Rolls</string>
+    <string name="no_chat">No users have started chatting here!\nWhy not be the first?</string>
 </resources>
