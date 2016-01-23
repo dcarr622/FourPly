@@ -29,28 +29,48 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif"
-                    android:singleLine="true"
-                    android:text="Author"
-                    android:textColor="@color/dark_grey"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif"
+                        android:singleLine="true"
+                        android:text="Author"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="18sp" />
+
+                    <RatingBar
+                        android:id="@+id/tiny_rolls_bar"
+                        style="@style/rollrating"
+                        android:layout_marginTop="-10dp"
+                        android:layout_marginRight="-20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:stepSize="1"
+                        android:isIndicator="true"
+                        android:scaleX=".44"
+                        android:scaleY=".44"/>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:layout_marginRight="16dp"
                     android:fontFamily="sans-serif"
                     android:lines="4"
                     android:text="Message"

@@ -43,16 +43,5 @@
 
         </RelativeLayout>
 
-        <RatingBar
-            android:id="@+id/tiny_rolls_bar"
-            style="@style/rollrating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="1"
-            android:isIndicator="true"
-            android:scaleX=".44"
-            android:scaleY=".44"/>
-
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
