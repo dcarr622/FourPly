@@ -36,6 +36,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".BathroomActivity"
+            android:label="@string/title_activity_bathroom"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".chat.ChatActivity"
             android:exported="true" />
     </application>
