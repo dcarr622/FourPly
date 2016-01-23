@@ -50,11 +50,21 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/description"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:layout_below="@id/ratingsLayout"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="32dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/buttonsLayout"
-            android:layout_below="@id/ratingsLayout"
+            android:layout_below="@id/description"
             android:orientation="horizontal">
 
             <TextView

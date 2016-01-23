@@ -127,6 +127,9 @@ public class BathroomActivity extends AppCompatActivity {
         ImageView hero = (ImageView) findViewById(R.id.heroImage);
         Picasso.with(BathroomActivity.this).load(bathroom.getHeroImage()).into(hero);
 
+        TextView description = (TextView) findViewById(R.id.description);
+        description.setText(bathroom.getDescription());
+
         //Setup the Fab
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
         fab.setOnClickListener(new View.OnClickListener() {
