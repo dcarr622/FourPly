@@ -27,7 +27,7 @@
             android:value="@string/parse_client_key" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".nearby.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

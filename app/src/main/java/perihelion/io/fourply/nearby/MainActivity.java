@@ -1,4 +1,4 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.nearby;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -21,12 +22,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.List;
+
+import perihelion.io.fourply.R;
+import perihelion.io.fourply.data.Bathroom;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
     private CoordinatorLayout mLayout;
     private GoogleApiClient mGoogleApiClient;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLayout = (CoordinatorLayout) findViewById(R.id.main_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mListView = (ListView) findViewById(R.id.bathroom_list);
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +90,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
+        bathrooms.findInBackground(new FindCallback<Bathroom>() {
+            public void done(List<Bathroom> bathrooms, ParseException exception) {
+                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, bathrooms);
+//                mListView.setAdapter(adapter);
+            }
+        });
     }
 
     protected void onStart() {

@@ -5,7 +5,11 @@ import android.app.Application;
 import com.firebase.client.Firebase;
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+
+import perihelion.io.fourply.data.Bathroom;
+import perihelion.io.fourply.data.Review;
 
 /**
  * Created by david on 1/22/16.
@@ -21,6 +25,8 @@ public class FourPlyApplication extends Application {
 
         // Add your initialization code here
         Parse.initialize(this);
+        ParseObject.registerSubclass(Bathroom.class);
+        ParseObject.registerSubclass(Review.class);
 
         ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();
