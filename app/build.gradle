@@ -36,6 +36,7 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.firebase:firebase-client-android:2.5.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-//    compile 'com.squareup.okhttp3:okhttp:3.0.1'
-//    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
+    compile 'com.google.android.gms:play-services-base:8.4.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
 }

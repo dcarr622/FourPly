@@ -3,4 +3,6 @@
     <string name="parse_app_id">xeaXGH8RxhctEwny3zLqW6loqlbgjv9VhgjkvwSW</string>
     <string name="parse_client_key">FQ8pxe1qkkHvz1C65vGsfmHncrKvLE7meRLU7JDy</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="ok">Ok</string>
+    <string name="permission_location_rationale">Enable location to find nearby bathrooms</string>
 </resources>
