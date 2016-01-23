@@ -10,14 +10,18 @@ import android.widget.ImageView;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.utils.Converters;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,12 +48,14 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         setContentView(R.layout.activity_ar_graffiti);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Mat m = null;
+        Mat overlay = null;
         try {
             m = Utils.loadResource(this, R.drawable.stall);
+            overlay = Utils.loadResource(this, R.drawable.graffiti);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        processMat(m);
+        processMat(m, overlay);
 //        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
 //        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 //        mOpenCvCameraView.setCvCameraViewListener(this);
@@ -92,9 +98,15 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
 
     private static Point pointOnLine(double theta, Point start, double distance) {
         theta = Math.PI / 2 - theta;
-        final double x = start.x + distance * Math.cos(theta);
-        final double y = start.y - distance * Math.sin(theta);
-        return new Point(x, y);
+        double x1 = start.x + distance * Math.cos(theta);
+        double x2 = start.x - distance * Math.cos(theta);
+        double y1 = start.y - distance * Math.sin(theta);
+        double y2 = start.y + distance * Math.sin(theta);
+        if (y2 > y1) {
+            return new Point(x2, y2);
+        } else {
+            return new Point(x1, y1);
+        }
     }
 
     private static Point segIntersect(double r1, double t1, double r2, double t2, int width, int height) {
@@ -139,12 +151,16 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         return corners;
     }
 
+    private static double distance(Point a, Point b) {
+        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    }
+
     private static Corner topLeftCorner(List<Corner> corners) {
         Collections.sort(corners, new Comparator<Corner>() {
             @Override
             public int compare(Corner lhs, Corner rhs) {
-                double ldist = Math.sqrt((lhs.p.x * lhs.p.x) + (lhs.p.y * lhs.p.y));
-                double rdist = Math.sqrt((rhs.p.x * rhs.p.x) + (rhs.p.y * rhs.p.y));
+                double ldist = distance(new Point(0, 0), lhs.p);
+                double rdist = distance(new Point(0, 0), rhs.p);
                 if (ldist < rdist)
                     return -1;
                 else if (ldist > rdist)
@@ -159,8 +175,8 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         Collections.sort(corners, new Comparator<Corner>() {
             @Override
             public int compare(Corner lhs, Corner rhs) {
-                double ldist = Math.sqrt(((lhs.p.x - width) * (lhs.p.x - width)) + (lhs.p.y * lhs.p.y));
-                double rdist = Math.sqrt(((rhs.p.x - width) * (rhs.p.x - width)) + (rhs.p.y * rhs.p.y));
+                double ldist = distance(new Point(width, 0), lhs.p);
+                double rdist = distance(new Point(width, 0), rhs.p);
                 if (ldist < rdist)
                     return -1;
                 else if (ldist > rdist)
@@ -171,7 +187,7 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         return corners.get(0);
     }
 
-    private void processMat(Mat m) {
+    private void processMat(Mat m, Mat overlay) {
         Mat gray = new Mat(m.rows(), m.cols(), CvType.CV_8UC1);
         Imgproc.cvtColor(m, gray, Imgproc.COLOR_RGB2GRAY);
         Mat blur = new Mat();
@@ -201,10 +217,10 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         }
 
         for (double[] horizontal : horizontalLines) {
-            Imgproc.line(m, pointOnLineRaw(horizontal[0], horizontal[1], 1000), pointOnLineRaw(horizontal[0], horizontal[1], -1000), new Scalar(0, 0, 255), 1);
+//            Imgproc.line(m, pointOnLineRaw(horizontal[0], horizontal[1], 1000), pointOnLineRaw(horizontal[0], horizontal[1], -1000), new Scalar(0, 0, 255), 1);
         }
         for (double[] vertical : verticalLines) {
-            Imgproc.line(m, pointOnLineRaw(vertical[0], vertical[1], 1000), pointOnLineRaw(vertical[0], vertical[1], -1000), new Scalar(0, 0, 255), 1);
+//            Imgproc.line(m, pointOnLineRaw(vertical[0], vertical[1], 1000), pointOnLineRaw(vertical[0], vertical[1], -1000), new Scalar(0, 0, 255), 1);
         }
 
         List<Corner> corners = findCorners(horizontalLines, verticalLines, m.cols(), m.rows());
@@ -212,16 +228,36 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             Corner topLeft = topLeftCorner(corners);
             Corner topRight = topRightCorner(corners, m.cols());
 
-            Imgproc.circle(m, topLeft.p, 5, new Scalar(255, 0, 0), -1);
-            Imgproc.circle(m, topRight.p, 5, new Scalar(255, 0, 0), -1);
+            double doorWidth = distance(topLeft.p, topRight.p);
+            double graffitiHeight = doorWidth * (640 / 480);
+            Point bottomLeft = pointOnLine(topLeft.vertical[1], topLeft.p, graffitiHeight);
+            Point bottomRight = pointOnLine(topRight.vertical[1], topRight.p, graffitiHeight);
+
+            List<Point> fromCorners = Arrays.asList(
+                    new Point(0, 0), new Point(overlay.width(), 0), new Point(0, overlay.height()), new Point(overlay.width(), overlay.height()));
+            List<Point> toCorners = Arrays.asList(topLeft.p, topRight.p, bottomLeft, bottomRight);
+            Mat from = Converters.vector_Point2f_to_Mat(fromCorners);
+            Mat to = Converters.vector_Point2f_to_Mat(toCorners);
+            Mat warp = Imgproc.getPerspectiveTransform(from, to);
+            Mat warpedOverlay = new Mat();
+            Imgproc.warpPerspective(overlay, warpedOverlay, warp, m.size());
+            Mat warpedOverlay3Channel = new Mat();
+            Imgproc.cvtColor(warpedOverlay, warpedOverlay3Channel, Imgproc.COLOR_RGBA2BGR);
+            Core.add(m, warpedOverlay3Channel, m);
+
+//            Imgproc.circle(m, topLeft.p, 5, new Scalar(255, 0, 0), -1);
+//            Imgproc.circle(m, topRight.p, 5, new Scalar(0, 255, 0), -1);
+//            Imgproc.circle(m, bottomLeft, 5, new Scalar(0, 0, 255), -1);
+//            Imgproc.circle(m, bottomRight, 5, new Scalar(255, 255, 0), -1);
+
+            ImageView imageView = (ImageView) findViewById(R.id.image);
+            Bitmap bm = Bitmap.createBitmap(m.cols(), m.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(m, bm);
+            imageView.setImageBitmap(bm);
         } else {
             Log.w(TAG, "Unable to find corners");
         }
 
-        ImageView imageView = (ImageView) findViewById(R.id.image);
-        Bitmap bm = Bitmap.createBitmap(gray.cols(), gray.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(m, bm);
-        imageView.setImageBitmap(bm);
     }
 
 }
