@@ -21,17 +21,9 @@ public class AddBathroomFragment extends DialogFragment implements View.OnClickL
     private String id;
     private String image;
 
-    public static AddBathroomFragment createInstance(String bathroomId, String imagePath){
+    public static AddBathroomFragment createInstance(){
         AddBathroomFragment fragment = new AddBathroomFragment();
-        Bundle args = new Bundle();
-        args.putString("id", bathroomId);
-        args.putString("image", imagePath);
-        fragment.setArguments(args);
         return fragment;
-    }
-
-    public static AddBathroomFragment createInstance(Bathroom bathroom){
-        return createInstance(bathroom.getObjectId(), bathroom.getHeroImage());
     }
 
     public AddBathroomFragment(){};
