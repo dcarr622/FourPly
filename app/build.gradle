@@ -13,6 +13,8 @@ android {
     }
     buildTypes {
         release {
+            buildConfigField("String", "PARSE_APPLICATION_ID", PARSE_APPLICATION_ID)
+            buildConfigField("String", "PARSE_CLIENT_KEY", PARSE_CLIENT_KEY)
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -26,4 +28,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.parse:parse-android:1.12.0'
     compile 'com.android.support:design:23.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
