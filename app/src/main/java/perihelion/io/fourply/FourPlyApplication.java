@@ -2,6 +2,7 @@ package perihelion.io.fourply;
 
 import android.app.Application;
 
+import com.firebase.client.Firebase;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseUser;
@@ -14,7 +15,7 @@ public class FourPlyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Firebase.setAndroidContext(this);
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
