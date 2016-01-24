@@ -76,7 +76,7 @@ public class BathroomActivity extends AppCompatActivity {
         emergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent postmatesIntent = new Intent(BathroomActivity.this, PostmatesActivity.class);
+                Intent postmatesIntent = new Intent(BathroomActivity.this, EmergencyActivity.class);
                 startActivity(postmatesIntent);
             }
         });
