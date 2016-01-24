@@ -28,6 +28,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -53,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BathroomActivity"
+            android:name=".bathroom.BathroomActivity"
             android:exported="true"
             android:label="@string/title_activity_bathroom"
             android:screenOrientation="portrait"
@@ -69,7 +70,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
-            android:name=".PostmatesActivity"
+            android:name=".bathroom.PostmatesActivity"
             android:screenOrientation="portrait" />
     </application>
 

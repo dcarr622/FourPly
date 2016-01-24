@@ -1,4 +1,4 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.bathroom;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -10,12 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.parse.ParseException;
-import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
+import perihelion.io.fourply.R;
 import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.data.Review;
 

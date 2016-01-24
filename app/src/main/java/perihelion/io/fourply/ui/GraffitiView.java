@@ -29,6 +29,7 @@ public class GraffitiView extends View {
     private Paint mPaint;
     private Canvas mCanvas;
     private Bitmap mCanvasBitmap;
+    private Bitmap customBitmap;
     private boolean isBrushActive = false;
     private ColorFilter mColorFilter;
 
@@ -79,6 +80,16 @@ public class GraffitiView extends View {
         mPaint = createNewPaint(Color.BLACK);
         mColorFilter = new PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
         setColor(Color.BLACK);
+    }
+
+    /**
+     * Set the Bitmap to use for the canvas
+     * @param bitmap
+     */
+    public void setBitmap(Bitmap bitmap){
+        mCanvasBitmap = bitmap;
+        mCanvas = new Canvas(mCanvasBitmap);
+        invalidate();
     }
 
     /**
@@ -259,7 +270,8 @@ public class GraffitiView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mCanvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        if(mCanvasBitmap == null)
+            mCanvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mCanvasBitmap);
     }
 

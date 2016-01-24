@@ -1,8 +1,6 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.bathroom;
 
-import android.app.DialogFragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -27,6 +25,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import perihelion.io.fourply.ARGraffitiActivity;
+import perihelion.io.fourply.R;
 import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.data.Review;
@@ -90,6 +90,15 @@ public class BathroomActivity extends AppCompatActivity {
             }
         });
 
+        //Setup the Fab
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -116,8 +125,12 @@ public class BathroomActivity extends AppCompatActivity {
                         reviewsList.addView(view);
                     }
                     numRolls /= reviews.size();
-                    ratingBar.setRating(numRolls);
-                    ratingText.setText(String.format(getString(R.string.ratingunit), numRolls));
+                    if (numRolls > 0) {
+                        ratingBar.setRating(numRolls);
+                        ratingText.setText(String.format(getString(R.string.ratingunit), numRolls));
+                    } else {
+                        ratingText.setText(getString(R.string.no_reviews));
+                    }
                 }
             }
         });
@@ -130,19 +143,6 @@ public class BathroomActivity extends AppCompatActivity {
 
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(bathroom.getDescription());
-
-        //Setup the Fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.reviewfab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment dialogFragment = ReviewFragment.createInstance(bathroom);
-                FragmentTransaction manager = getFragmentManager().beginTransaction();
-                manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                dialogFragment.show(manager, "Review");
-            }
-        });
-
     }
 
     @Override
