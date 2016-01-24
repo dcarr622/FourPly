@@ -38,8 +38,8 @@
                     android:layout_height="match_parent"/>
 
                 <ImageView
-                    android:layout_width="122dp"
-                    android:layout_height="122dp"
+                    android:layout_width="111dp"
+                    android:layout_height="111dp"
                     android:background="@drawable/avatar_blue"
                     android:layout_gravity="top|start"/>
 
