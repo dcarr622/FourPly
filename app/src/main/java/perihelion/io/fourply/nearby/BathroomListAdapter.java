@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import perihelion.io.fourply.BathroomActivity;
+import perihelion.io.fourply.bathroom.BathroomActivity;
 import perihelion.io.fourply.R;
 import perihelion.io.fourply.data.Bathroom;
 

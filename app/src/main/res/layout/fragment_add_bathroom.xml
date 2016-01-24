@@ -4,21 +4,27 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <FrameLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/addbanner"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"
-            android:padding="60dp"
-            android:background="@color/light_gray"
-            android:foreground="@drawable/ic_add_white_36dp"
-            />
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            >
+            <ImageView
+                android:id="@+id/addbanner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:background="@color/dark_grey"
+                android:src="@drawable/ic_add_white_36dp"
+                android:padding="100dp"
+                />
+        </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="@drawable/bkgrnd_text"
             android:orientation="vertical"
             android:layout_gravity="bottom"
             >
@@ -29,7 +35,7 @@
                 android:layout_gravity="bottom"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:hint="Subject"
+                android:hint="Name"
                 android:textColor="@android:color/white"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="25sp"
@@ -84,7 +90,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:textColor="?attr/colorPrimaryDark"
-                android:text="Rate!"
+                android:text="Submit"
                 />
         </LinearLayout>
     </LinearLayout>

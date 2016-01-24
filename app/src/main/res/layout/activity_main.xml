@@ -24,14 +24,26 @@
             app:expandedTitleTextAppearance="@style/TransparentText"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <fragment
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:name="com.google.android.gms.maps.MapFragment"
-                android:id="@+id/map"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent">
+
+                <fragment
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:fitsSystemWindows="true"
+                    app:layout_collapseMode="parallax"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:layout_width="111dp"
+                    android:layout_height="111dp"
+                    android:background="@drawable/avatar_blue"
+                    android:layout_gravity="top|start"/>
+
+            </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -49,8 +61,25 @@
         android:id="@+id/bathroom_list"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="perihelion.io.fourply.nearby.MainActivity"
-        tools:showIn="@layout/activity_main">
-    </android.support.v7.widget.RecyclerView>  />
+        tools:showIn="@layout/activity_main" />
+
+    <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_gravity="center_horizontal|top">
+
+        <TextView
+            android:id="@+id/up_next_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/nearby_bathrooms"
+            android:textColor="@color/grey_500"
+            android:textSize="18sp" />
+
+    </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

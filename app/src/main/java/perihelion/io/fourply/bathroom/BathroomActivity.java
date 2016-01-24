@@ -1,4 +1,4 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.bathroom;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import perihelion.io.fourply.R;
 import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.data.Review;
@@ -125,8 +126,12 @@ public class BathroomActivity extends AppCompatActivity {
                         reviewsList.addView(view);
                     }
                     numRolls /= reviews.size();
-                    ratingBar.setRating(numRolls);
-                    ratingText.setText(String.format(getString(R.string.ratingunit), numRolls));
+                    if (numRolls > 0) {
+                        ratingBar.setRating(numRolls);
+                        ratingText.setText(String.format(getString(R.string.ratingunit), numRolls));
+                    } else {
+                        ratingText.setText(getString(R.string.no_reviews));
+                    }
                 }
             }
         });

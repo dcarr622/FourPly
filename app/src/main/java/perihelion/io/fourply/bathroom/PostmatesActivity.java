@@ -1,4 +1,4 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.bathroom;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import perihelion.io.fourply.R;
 
 public class PostmatesActivity extends AppCompatActivity {
 
