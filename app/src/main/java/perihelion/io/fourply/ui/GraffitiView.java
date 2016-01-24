@@ -87,7 +87,8 @@ public class GraffitiView extends View {
      * @param bitmap
      */
     public void setBitmap(Bitmap bitmap){
-        mCanvasBitmap = bitmap;
+        Bitmap workingBitmap = Bitmap.createBitmap(bitmap);
+        mCanvasBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
         mCanvas = new Canvas(mCanvasBitmap);
         invalidate();
     }
@@ -119,7 +120,7 @@ public class GraffitiView extends View {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
-        mCanvas.drawBitmap(mCanvasBitmap, 0, 0, paint);
+        mCanvas.drawBitmap(mCanvasBitmap, 0, 0, null);
         return mCanvasBitmap;
     }
 

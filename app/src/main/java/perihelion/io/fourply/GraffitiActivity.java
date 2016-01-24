@@ -15,7 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.ui.GraffitiView;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -57,6 +63,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         Bundle extras = getIntent().getExtras();
         if(extras != null && extras.containsKey(KEY_OBJECT_ID)){
             bathroomId = extras.getString(KEY_OBJECT_ID, "lolFail");
+            setTitle(extras.getString("name"));
         }
 
         container = (LinearLayout) findViewById(R.id.ll_brushes);
@@ -118,15 +125,26 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void saveImageToBitmap(){
+        Log.d("PARSE", "saveImageToBitmap");
         if(bathroomId == null){
             Log.e(GraffitiActivity.class.getSimpleName(), "Couldn't get bathroom id");
             return;
         }
 
+
         FileOutputStream out = null;
         try {
             out = openFileOutput(bathroomId + ".png", Context.MODE_PRIVATE);
             graffitiView.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+            ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
+            bathrooms.getInBackground(bathroomId, new GetCallback<Bathroom>() {
+                @Override
+                public void done(Bathroom bathroom, ParseException e) {
+                    Log.d("PARSE", "got bathroom");
+                    bathroom.setGraffiti(getFilesDir() + "/" + bathroomId + ".png");
+                    ((ImageView) findViewById(R.id.iv_background)).setImageBitmap(graffitiView.getBitmap());
+                }
+            });
             // PNG is a lossless format, the compression factor (100) is ignored
         } catch (Exception e) {
             e.printStackTrace();
