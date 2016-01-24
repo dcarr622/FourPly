@@ -2,12 +2,17 @@ package perihelion.io.fourply;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -16,6 +21,9 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -24,9 +32,9 @@ import java.io.IOException;
 public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     public native int processMat(long matAddrM, long matAddrOverlay);
-
     private static final String TAG = "ARGraffiti";
     private static final int PERMISSION_REQUEST_CAMERA = 42;
+    private boolean mDrawTapRequested = false;
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -43,14 +51,27 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_graffiti);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         try {
-            overlay = Utils.loadResource(this, R.drawable.graffiti);
-        } catch (IOException e) {
+            FileInputStream in = openFileInput(getIntent().getStringExtra("id") + ".png");
+            Bitmap graffitiBitmap = BitmapFactory.decodeStream(in);
+            overlay = new Mat();
+            Utils.bitmapToMat(graffitiBitmap, overlay);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         mOpenCvCameraView = (FourplyCameraView) findViewById(R.id.camera);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+        findViewById(R.id.root).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawTapRequested = true;
+                Log.d("ARG", "tap requested");
+            }
+        });
     }
 
     public void onResume() {
@@ -111,6 +132,22 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat input = inputFrame.rgba().clone();
         long start = System.currentTimeMillis();
+        if (mDrawTapRequested) {
+            Log.d("ARG", "exporting bitmap");
+            mDrawTapRequested = false;
+            try {
+                FileOutputStream out = openFileOutput(getIntent().getStringExtra("id") + "bkg.png", Context.MODE_PRIVATE);
+                Bitmap bitmap = Bitmap.createBitmap(input.cols(), input.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(input, bitmap);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Intent drawIntent = new Intent(this, GraffitiActivity.class);
+            drawIntent.putExtras(getIntent().getExtras());
+            startActivity(drawIntent);
+            finish();
+        }
         processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
         long end = System.currentTimeMillis();
         Log.i(TAG, (end - start) + "ms");

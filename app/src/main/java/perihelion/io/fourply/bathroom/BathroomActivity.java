@@ -96,12 +96,10 @@ public class BathroomActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
-//                startActivity(intent);
                 bathroom.getGraffiti(BathroomActivity.this, new Bathroom.GraffitiListener() {
                     @Override
                     public void onComplete() {
-                        Intent intent = new Intent(BathroomActivity.this, GraffitiActivity.class);
+                        Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
                         intent.putExtra("id", bathroomID);
                         intent.putExtra("name", bathroomName);
                         startActivity(intent);

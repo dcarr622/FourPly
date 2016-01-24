@@ -21,4 +21,6 @@
     <string name="notification_progress">Uploading Bathroom...</string>
     <string name="notification_fail">Bathroom failed to upload...</string>
     <string name="no_reviews">No reviews</string>
+    <string name="tap_draw">Tap anywhere to draw graffiti</string>
+    <string name="saved_sketch">Your graffiti was saved</string>
 </resources>
