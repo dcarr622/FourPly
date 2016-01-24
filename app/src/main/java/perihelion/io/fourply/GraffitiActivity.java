@@ -173,8 +173,14 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                                     new ColorStateList(
                                             new int[][] {
                                                     new int[] { android.R.attr.state_enabled}, // enabled
+                                                    new int[] {-android.R.attr.state_enabled}, // disabled
+                                                    new int[] {-android.R.attr.state_checked}, // unchecked
+                                                    new int[] { android.R.attr.state_pressed}  // pressed
                                             },
                                             new int[] {
+                                                    color,
+                                                    color,
+                                                    color,
                                                     color
                                             }
                                     )
