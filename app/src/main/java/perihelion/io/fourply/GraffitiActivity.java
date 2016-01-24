@@ -3,6 +3,7 @@ package perihelion.io.fourply;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -33,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.ui.GraffitiView;
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -70,6 +74,9 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graffiti);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         Bundle extras = getIntent().getExtras();
         if(extras != null && extras.containsKey(KEY_OBJECT_ID)){
@@ -167,7 +174,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                 public void done(Bathroom bathroom, ParseException e) {
                     Log.d("PARSE", "got bathroom");
                     bathroom.setGraffiti(getFilesDir() + "/" + bathroomId + ".png");
-//                    ((ImageView) findViewById(R.id.iv_background)).setImageBitmap(graffitiView.getBitmap());
+                    Toast.makeText(GraffitiActivity.this, getString(R.string.saved_sketch), Toast.LENGTH_LONG).show();
                 }
             });
             // PNG is a lossless format, the compression factor (100) is ignored
@@ -265,6 +272,20 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                     .setStartDelay(duration / 2 * i)
                     .setInterpolator(new AccelerateDecelerateInterpolator())
                     .start();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
         }
     }
 

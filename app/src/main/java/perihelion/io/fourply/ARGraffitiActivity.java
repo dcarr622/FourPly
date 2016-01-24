@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,11 +51,16 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_graffiti);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         try {
-            overlay = Utils.loadResource(this, R.drawable.graffiti);
-        } catch (IOException e) {
+            FileInputStream in = openFileInput(getIntent().getStringExtra("id") + ".png");
+            Bitmap graffitiBitmap = BitmapFactory.decodeStream(in);
+            overlay = new Mat();
+            Utils.bitmapToMat(graffitiBitmap, overlay);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         mOpenCvCameraView = (FourplyCameraView) findViewById(R.id.camera);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
