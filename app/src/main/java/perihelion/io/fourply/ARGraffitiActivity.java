@@ -69,7 +69,6 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             @Override
             public void onClick(View view) {
                 mDrawTapRequested = true;
-                Log.d("ARG", "tap requested");
             }
         });
     }
@@ -133,7 +132,6 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         Mat input = inputFrame.rgba().clone();
         long start = System.currentTimeMillis();
         if (mDrawTapRequested) {
-            Log.d("ARG", "exporting bitmap");
             mDrawTapRequested = false;
             try {
                 FileOutputStream out = openFileOutput(getIntent().getStringExtra("id") + "bkg.png", Context.MODE_PRIVATE);
@@ -148,7 +146,9 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             startActivity(drawIntent);
             finish();
         }
-        processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
+        if (overlay != null) {
+            processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
+        }
         long end = System.currentTimeMillis();
         Log.i(TAG, (end - start) + "ms");
         return input;
