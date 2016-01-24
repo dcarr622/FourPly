@@ -70,11 +70,11 @@
             android:name=".ARGraffitiActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
             android:name=".bathroom.EmergencyActivity"
             android:label="@string/title_activity_emergency"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

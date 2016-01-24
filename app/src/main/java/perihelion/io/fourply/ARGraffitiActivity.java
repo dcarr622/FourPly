@@ -2,6 +2,7 @@ package perihelion.io.fourply;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -42,6 +43,7 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
     private static final String TAG = "ARGraffiti";
     private static final int PERMISSION_REQUEST_CAMERA = 42;
     private boolean mDrawTapRequested = false;
+    private ProgressDialog progressDialog;
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -79,8 +81,11 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             public void onClick(View view) {
                 Log.d(TAG, "onClick - img requested");
                 mDrawTapRequested = true;
+                showProgressDialog();
             }
         });
+
+        Toast.makeText(this, getString(R.string.tap_draw), Toast.LENGTH_LONG).show();
     }
 
     public void onResume() {
@@ -102,6 +107,9 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
 
     public void onPause() {
         super.onPause();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
     }
@@ -179,6 +187,25 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         long end = System.currentTimeMillis();
         Log.i(TAG, (end - start) + "ms");
         return input;
+    }
+
+    private void showProgressDialog() {
+        if (null == progressDialog) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        progressDialog.setMessage(getString(R.string.loading));
+
+        if (!isFinishing() && !progressDialog.isShowing()) {
+            try {
+                progressDialog.show();
+            } catch (WindowManager.BadTokenException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
