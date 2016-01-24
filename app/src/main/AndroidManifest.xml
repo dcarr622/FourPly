@@ -62,7 +62,9 @@
         <activity
             android:name=".chat.ChatActivity"
             android:exported="true" />
-        <activity android:name=".GraffitiActivity"
+        <activity
+            android:name=".GraffitiActivity"
+            android:screenOrientation="portrait"
             android:exported="true"/>
         <activity
             android:name=".ARGraffitiActivity"

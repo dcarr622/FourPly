@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <FrameLayout
         android:layout_width="300dp"
@@ -29,7 +29,7 @@
             android:layout_gravity="bottom"
             >
             <EditText
-                android:id="@+id/field_subject"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -54,7 +54,7 @@
         android:paddingEnd="16dp"
         >
         <EditText
-            android:id="@+id/field_body"
+            android:id="@+id/field_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"

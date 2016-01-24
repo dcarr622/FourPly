@@ -1,8 +1,6 @@
 package perihelion.io.fourply.bathroom;
 
-import android.app.DialogFragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -28,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import perihelion.io.fourply.ARGraffitiActivity;
+import perihelion.io.fourply.GraffitiActivity;
 import perihelion.io.fourply.R;
 import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
@@ -97,8 +96,27 @@ public class BathroomActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
+//                startActivity(intent);
+                bathroom.getGraffiti(BathroomActivity.this, new Bathroom.GraffitiListener() {
+                    @Override
+                    public void onComplete() {
+                        Intent intent = new Intent(BathroomActivity.this, GraffitiActivity.class);
+                        intent.putExtra("id", bathroomID);
+                        intent.putExtra("name", bathroomName);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+
+        FloatingActionButton reviewfab = (FloatingActionButton) findViewById(R.id.reviewfab);
+        reviewfab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                ReviewFragment reviewFragment = ReviewFragment.createInstance(bathroom);
+                reviewFragment.show(fm, null);
             }
         });
     }

@@ -9,5 +9,5 @@
     <dimen name="brush_preview_size">50dp</dimen>
     <dimen name="brush_preview_radius">25dp</dimen>
     <dimen name="brush_size">50dp</dimen>
-    <dimen name="brush_preview_margin_left">10dp</dimen>
+    <dimen name="brush_preview_margin">10dp</dimen>
 </resources>

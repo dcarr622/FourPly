@@ -27,7 +27,6 @@ public class GraffitiView extends View {
 
     private Path mPath;
     private Paint mPaint;
-    private Canvas mCanvas;
     private Bitmap mCanvasBitmap;
     private boolean isBrushActive = false;
     private ColorFilter mColorFilter;
@@ -82,6 +81,15 @@ public class GraffitiView extends View {
     }
 
     /**
+     * Set the Bitmap to use for the canvas
+     * @param bitmap
+     */
+    public void setBitmap(Bitmap bitmap){
+        mCanvasBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        invalidate();
+    }
+
+    /**
      * Clear the Canvas
      */
     public void clear(){
@@ -105,11 +113,10 @@ public class GraffitiView extends View {
      * @return a bitmap with the graffiti stored on it
      */
     public Bitmap getBitmap() {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.FILL);
-        mCanvas.drawBitmap(mCanvasBitmap, 0, 0, paint);
-        return mCanvasBitmap;
+        Bitmap bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        this.draw(canvas);
+        return bitmap;
     }
 
     /**
@@ -239,7 +246,7 @@ public class GraffitiView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        canvas.drawBitmap(mCanvasBitmap, 0, 0, null);
         //Draw all of our old Items
         for(Layer layer : mLayerList){
             if(layer.isPath()){
@@ -259,8 +266,9 @@ public class GraffitiView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mCanvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mCanvasBitmap);
+        if(mCanvasBitmap == null)
+            mCanvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+//        mCanvas = new Canvas(mCanvasBitmap);
     }
 
     @Override
