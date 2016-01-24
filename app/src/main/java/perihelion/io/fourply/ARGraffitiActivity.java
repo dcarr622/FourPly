@@ -52,9 +52,7 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_graffiti);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        Mat m = null;
         try {
-            m = Utils.loadResource(this, R.drawable.stall);
             overlay = Utils.loadResource(this, R.drawable.graffiti);
         } catch (IOException e) {
             e.printStackTrace();
