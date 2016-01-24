@@ -63,6 +63,24 @@
         tools:context="perihelion.io.fourply.nearby.MainActivity"
         tools:showIn="@layout/activity_main" />
 
+    <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_gravity="center_horizontal|top">
+
+        <TextView
+            android:id="@+id/up_next_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/nearby_bathrooms"
+            android:textColor="@color/grey_500"
+            android:textSize="18sp" />
+
+    </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

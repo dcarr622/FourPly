@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="perihelion.io.fourply">
+    package="perihelion.io.fourply" >
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -61,6 +61,8 @@
         <activity
             android:name=".chat.ChatActivity"
             android:exported="true" />
+        <activity android:name=".GraffitiActivity"
+            android:exported="true"/>
         <activity
             android:name=".ARGraffitiActivity"
             android:exported="true"

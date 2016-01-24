@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <corners android:radius="@dimen/brush_preview_radius"/>
+            <size android:height="@dimen/brush_preview_size" android:width="@dimen/brush_preview_size"/>
+            <solid android:color="@color/brush_preview_color"/>
+        </shape>
+    </item>
+    <item
+        android:id="@+id/item_brush_drawable"
+        android:drawable="@drawable/brush_spray"
+        android:height="30dp" android:width="30dp"
+        android:top="10dp" android:left="10dp">
+        </item>
+</layer-list>
