@@ -104,21 +104,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .build();
         }
 
-        ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
-        bathrooms.findInBackground(new FindCallback<Bathroom>() {
-            public void done(List<Bathroom> bathrooms, ParseException exception) {
-                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, mRecyclerView, bathrooms);
-                mRecyclerView.setAdapter(adapter);
-                for (Bathroom bathroom: bathrooms) {
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
-                            .title(bathroom.getName())
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
-                    mBathroomMarkers.put(marker, bathroom);
-                }
-            }
-        });
-
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
@@ -159,6 +144,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
+        ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
+        bathrooms.findInBackground(new FindCallback<Bathroom>() {
+            public void done(List<Bathroom> bathrooms, ParseException exception) {
+                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, mRecyclerView, bathrooms);
+                mRecyclerView.setAdapter(adapter);
+                for (Bathroom bathroom: bathrooms) {
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
+                            .title(bathroom.getName())
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                    mBathroomMarkers.put(marker, bathroom);
+                }
+            }
+        });
     }
 
     @Override
