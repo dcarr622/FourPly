@@ -87,8 +87,7 @@ public class GraffitiView extends View {
      * @param bitmap
      */
     public void setBitmap(Bitmap bitmap){
-        Bitmap workingBitmap = Bitmap.createBitmap(bitmap);
-        mCanvasBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        mCanvasBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         mCanvas = new Canvas(mCanvasBitmap);
         invalidate();
     }
@@ -117,11 +116,10 @@ public class GraffitiView extends View {
      * @return a bitmap with the graffiti stored on it
      */
     public Bitmap getBitmap() {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.FILL);
-        mCanvas.drawBitmap(mCanvasBitmap, 0, 0, null);
-        return mCanvasBitmap;
+        Bitmap bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        this.draw(canvas);
+        return bitmap;
     }
 
     /**

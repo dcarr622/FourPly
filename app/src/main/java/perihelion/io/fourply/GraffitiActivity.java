@@ -168,8 +168,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         else{
             switch(v.getId()){
                 case R.id.btn_brush:
-                    View view = findViewById(R.id.ll_brushes);
-                    view.setVisibility(view.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+                    animateOpen();
                     break;
                 case R.id.btn_undo:
                     graffitiView.undo();
@@ -212,5 +211,16 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                 default:
             }
         }
+    }
+
+    private void animateOpen(){
+        View view = findViewById(R.id.ll_brushes);
+        view.setVisibility(view.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+
+        /*ViewGroup viewGroup = (ViewGroup) findViewById(R.id.ll_brushes);
+        int marginLeft = getResources().getDimensionPixelOffset(R.dimen.brush_preview_margin);
+        for(int i=0; i<viewGroup.getChildCount(); i++){
+            int translateX =
+        }*/
     }
 }
