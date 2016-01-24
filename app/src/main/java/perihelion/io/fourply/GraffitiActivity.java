@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,8 +39,6 @@ import yuku.ambilwarna.AmbilWarnaDialog;
  */
 public class GraffitiActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String KEY_OBJECT_ID = "id";
-    private static final String BRUSH_NAMES[] = {"Spray Paint, Paint", "Pen"};
-
     private static final int BRUSH_RES[] = {
             R.drawable.brush_spray,
             R.drawable.brush_paint
@@ -54,6 +54,8 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
     private GraffitiView graffitiView;
     private ArrayList<Bitmap> brushList = new ArrayList<>();
     private String bathroomId = null;
+    private boolean isBrushesOpen = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         int brushMargin = getResources().getDimensionPixelOffset(R.dimen.brush_preview_margin);
 
         //Generate and add the Brushes to the View
-        for(int i=0; i<BRUSH_NAMES.length; i++){
+        for(int i=0; i<BRUSH_PREV.length; i++){
             ImageButton button = new ImageButton(this);
             LayerDrawable layerDrawable = (LayerDrawable) getDrawable(BRUSH_PREV[i]);
             Drawable drawable = layerDrawable.getDrawable(1);
@@ -105,8 +107,13 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                     brushPreviewSize,
                     brushPreviewSize);
 
-            lp.leftMargin = brushMargin;
+            lp.setMargins(brushMargin, 0, 0, 0);
+            lp.setMarginStart(brushMargin);
+            button.setLayoutParams(lp);
 
+            float translate = brushPreviewSize + brushMargin * (BRUSH_PREV.length-i);
+            button.setTranslationX(translate);
+            button.setAlpha(0f);
             container.addView(button, lp);
         }
         graffitiView.setBrushList(brushList);
@@ -168,7 +175,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         else{
             switch(v.getId()){
                 case R.id.btn_brush:
-                    animateOpen();
+                    animate(!isBrushesOpen);
                     break;
                 case R.id.btn_undo:
                     graffitiView.undo();
@@ -213,14 +220,22 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void animateOpen(){
-        View view = findViewById(R.id.ll_brushes);
-        view.setVisibility(view.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
-
-        /*ViewGroup viewGroup = (ViewGroup) findViewById(R.id.ll_brushes);
+    private void animate(boolean shouldOpen){
+        Log.d(getClass().getSimpleName(), "Should animate: " + shouldOpen);
+        isBrushesOpen = shouldOpen;
+        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.ll_brushes);
         int marginLeft = getResources().getDimensionPixelOffset(R.dimen.brush_preview_margin);
         for(int i=0; i<viewGroup.getChildCount(); i++){
-            int translateX =
-        }*/
+            View view = viewGroup.getChildAt(i);
+            float translateX = view.getMeasuredWidth() + marginLeft * (viewGroup.getChildCount()-i);
+            view.animate().cancel();
+            view.animate()
+                    .translationX(shouldOpen?0:translateX)
+                    .alpha(shouldOpen?1:0)
+                    .setDuration(200)
+                    .setStartDelay(100*i)
+                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                    .start();
+        }
     }
 }

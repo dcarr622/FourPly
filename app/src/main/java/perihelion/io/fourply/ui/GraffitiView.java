@@ -27,9 +27,7 @@ public class GraffitiView extends View {
 
     private Path mPath;
     private Paint mPaint;
-    private Canvas mCanvas;
     private Bitmap mCanvasBitmap;
-    private Bitmap customBitmap;
     private boolean isBrushActive = false;
     private ColorFilter mColorFilter;
 
@@ -88,7 +86,6 @@ public class GraffitiView extends View {
      */
     public void setBitmap(Bitmap bitmap){
         mCanvasBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-        mCanvas = new Canvas(mCanvasBitmap);
         invalidate();
     }
 
@@ -249,7 +246,7 @@ public class GraffitiView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        canvas.drawBitmap(mCanvasBitmap, 0, 0, null);
         //Draw all of our old Items
         for(Layer layer : mLayerList){
             if(layer.isPath()){
@@ -271,7 +268,7 @@ public class GraffitiView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         if(mCanvasBitmap == null)
             mCanvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mCanvasBitmap);
+//        mCanvas = new Canvas(mCanvasBitmap);
     }
 
     @Override
