@@ -180,9 +180,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void updateLocation() {
         try {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            mLat = (float) lastLocation.getLatitude();
-            mLng = (float) lastLocation.getLongitude();
             if (lastLocation != null) {
+                mLat = (float) lastLocation.getLatitude();
+                mLng = (float) lastLocation.getLongitude();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 18));
             }
         } catch (SecurityException e) {

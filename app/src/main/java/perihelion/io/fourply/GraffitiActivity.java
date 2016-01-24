@@ -176,10 +176,13 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
             in = openFileInput(bathroomId + ".png");
             Bitmap graffitiBitmap = BitmapFactory.decodeStream(in);
             graffitiView.setBitmap(graffitiBitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
             in = openFileInput(bathroomId + "bkg.png");
             Bitmap backgroundBitmap = BitmapFactory.decodeStream(in);
             backgroundView.setImageBitmap(backgroundBitmap);
-            Log.d(getClass().getSimpleName(), "Set the bitmap");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
