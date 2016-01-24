@@ -26,7 +26,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import perihelion.io.fourply.ARGraffitiActivity;
-import perihelion.io.fourply.GraffitiActivity;
 import perihelion.io.fourply.R;
 import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
@@ -76,7 +75,7 @@ public class BathroomActivity extends AppCompatActivity {
         emergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent postmatesIntent = new Intent(BathroomActivity.this, PostmatesActivity.class);
+                Intent postmatesIntent = new Intent(BathroomActivity.this, EmergencyActivity.class);
                 startActivity(postmatesIntent);
             }
         });
@@ -88,23 +87,6 @@ public class BathroomActivity extends AppCompatActivity {
                 FragmentManager fm = getFragmentManager();
                 ReviewFragment reviewFragment = ReviewFragment.createInstance(bathroom);
                 reviewFragment.show(fm, null);
-            }
-        });
-
-        //Setup the Fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bathroom.getGraffiti(BathroomActivity.this, new Bathroom.GraffitiListener() {
-                    @Override
-                    public void onComplete() {
-                        Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
-                        intent.putExtra("id", bathroomID);
-                        intent.putExtra("name", bathroomName);
-                        startActivity(intent);
-                    }
-                });
             }
         });
 
@@ -161,6 +143,23 @@ public class BathroomActivity extends AppCompatActivity {
 
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(bathroom.getDescription());
+
+        //Setup the Fab
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bathroom.getGraffiti(BathroomActivity.this, new Bathroom.GraffitiListener() {
+                    @Override
+                    public void onComplete() {
+                        Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
+                        intent.putExtra("id", bathroomID);
+                        intent.putExtra("name", bathroomName);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -185,8 +184,6 @@ public class BathroomActivity extends AppCompatActivity {
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }

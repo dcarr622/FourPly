@@ -5,6 +5,10 @@
 #include <jni.h>
 #include "opencv2/opencv.hpp"
 #include <list>
+#include <android/log.h>
+
+#define APPNAME "FourPly"
+
 
 using namespace cv;
 
@@ -122,22 +126,26 @@ typedef struct GraffitiFrame {
     bool valid;
 } GraffitiFrame;
 
+const int scaleFactor = 4;
 const int cannyThreshold = 50;
 const double angleThreshold = M_PI / 6;
 Mat gray;
 Mat canny;
 Mat blurred;
+Mat small;
 GraffitiFrame lastFrame;
 int lastFrameCounter = 0;
 /**
  * Draw graffiti on top of the Mat m
  */
 void processMat(Mat& m, Mat& overlay) {
-    cvtColor(m, gray, COLOR_RGB2GRAY);
+    Size originalSize = m.size();
+    resize(m, small, m.size() / scaleFactor);
+    cvtColor(small, gray, COLOR_RGB2GRAY);
     bilateralFilter(gray, blurred, 11, 17, 17);
     Canny(blurred, canny, cannyThreshold, cannyThreshold * 3, 3, true);
     std::vector<Vec2f> lines;
-    HoughLines(canny, lines, 1, M_PI / 180, 100);
+    HoughLines(canny, lines, 1, M_PI / 180, 75);
 
     std::list<Line> horizontalLines;
     std::list<Line> verticalLines;
@@ -150,6 +158,8 @@ void processMat(Mat& m, Mat& overlay) {
         if (fabs(line.theta) < angleThreshold || fabs(line.theta - M_PI) < angleThreshold)
             verticalLines.push_back(line);
     }
+
+    __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "Found %d vertical lines, %d horizontal lines", verticalLines.size(), horizontalLines.size());
 
     /* for (auto it = verticalLines.begin(); it != verticalLines.end(); ++it) { */
     /*     Line line = *it; */
@@ -193,18 +203,18 @@ void drawGraffiti(Mat& m, Mat& overlay) {
     src_vertices[3] = Point(overlay.cols, overlay.rows);
 
     Point2f dst_vertices[4];
-    dst_vertices[0] = lastFrame.topLeft;
-    dst_vertices[1] = lastFrame.topRight;
-    dst_vertices[2] = lastFrame.bottomLeft;
-    dst_vertices[3] = lastFrame.bottomRight;
+    dst_vertices[0] = lastFrame.topLeft * scaleFactor;
+    dst_vertices[1] = lastFrame.topRight * scaleFactor;
+    dst_vertices[2] = lastFrame.bottomLeft * scaleFactor;
+    dst_vertices[3] = lastFrame.bottomRight * scaleFactor;
 
     Mat transform = getPerspectiveTransform(src_vertices, dst_vertices);
     warpPerspective(overlay, warped, transform, m.size());
 
-    circle(m, lastFrame.topLeft, 5, Scalar(255, 0, 0), -1);
-    circle(m, lastFrame.topRight, 5, Scalar(0, 255, 0), -1);
-    circle(m, lastFrame.bottomLeft, 5, Scalar(0, 0, 255), -1);
-    circle(m, lastFrame.bottomRight, 5, Scalar(0, 255, 255), -1);
+    circle(m, lastFrame.topLeft * scaleFactor, 5, Scalar(255, 0, 0), -1);
+    circle(m, lastFrame.topRight * scaleFactor, 5, Scalar(0, 255, 0), -1);
+    circle(m, lastFrame.bottomLeft * scaleFactor, 5, Scalar(0, 0, 255), -1);
+    circle(m, lastFrame.bottomRight * scaleFactor, 5, Scalar(0, 255, 255), -1);
 
     cv::add(m, warped, m);
 }

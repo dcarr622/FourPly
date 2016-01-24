@@ -2,6 +2,7 @@ package perihelion.io.fourply;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,17 +25,25 @@ import org.opencv.core.Mat;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by vmagro on 1/23/16.
  */
 public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
-    public native int processMat(long matAddrM, long matAddrOverlay);
+    public native void processMat(long matAddrM, long matAddrOverlay);
+
     private static final String TAG = "ARGraffiti";
     private static final int PERMISSION_REQUEST_CAMERA = 42;
     private boolean mDrawTapRequested = false;
+    private ProgressDialog progressDialog;
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -57,7 +66,9 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             Bitmap graffitiBitmap = BitmapFactory.decodeStream(in);
             overlay = new Mat();
             Utils.bitmapToMat(graffitiBitmap, overlay);
+            Log.d(TAG, "imported graffiti");
         } catch (FileNotFoundException e) {
+            Log.d(TAG, "graffiti import failed");
             e.printStackTrace();
         }
 
@@ -68,10 +79,13 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         findViewById(R.id.root).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick - img requested");
                 mDrawTapRequested = true;
-                Log.d("ARG", "tap requested");
+                showProgressDialog();
             }
         });
+
+        Toast.makeText(this, getString(R.string.tap_draw), Toast.LENGTH_LONG).show();
     }
 
     public void onResume() {
@@ -93,6 +107,9 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
 
     public void onPause() {
         super.onPause();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
     }
@@ -130,10 +147,10 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        Mat input = inputFrame.rgba().clone();
+        final Mat input = inputFrame.rgba().clone();
         long start = System.currentTimeMillis();
         if (mDrawTapRequested) {
-            Log.d("ARG", "exporting bitmap");
+            Log.d(TAG, "mDrawTapRequested saving image");
             mDrawTapRequested = false;
             try {
                 FileOutputStream out = openFileOutput(getIntent().getStringExtra("id") + "bkg.png", Context.MODE_PRIVATE);
@@ -148,10 +165,47 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             startActivity(drawIntent);
             finish();
         }
-        processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
+        if (overlay != null) {
+            ExecutorService executor = Executors.newCachedThreadPool();
+            Callable<Object> task = new Callable<Object>() {
+                public Object call() {
+                    processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
+                    return null;
+                }
+            };
+            Future<Object> future = executor.submit(task);
+            try {
+                future.get(1000, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+                //handle the timeout
+                Log.w(TAG, "frame processing timed out");
+                return input;
+            } finally {
+                future.cancel(true);
+            }
+        }
         long end = System.currentTimeMillis();
         Log.i(TAG, (end - start) + "ms");
         return input;
+    }
+
+    private void showProgressDialog() {
+        if (null == progressDialog) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        progressDialog.setMessage(getString(R.string.loading));
+
+        if (!isFinishing() && !progressDialog.isShowing()) {
+            try {
+                progressDialog.show();
+            } catch (WindowManager.BadTokenException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
