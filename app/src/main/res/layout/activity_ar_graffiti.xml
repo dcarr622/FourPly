@@ -4,7 +4,7 @@
     android:id="@+id/root"
     android:layout_height="match_parent">
 
-    <perihelion.io.fourply.FourplyCameraView
+    <perihelion.io.fourply.graffiti.FourplyCameraView
         android:id="@+id/camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -1,4 +1,4 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.graffiti;
 
 import android.content.Context;
 import android.graphics.ImageFormat;

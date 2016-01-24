@@ -1,4 +1,4 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.graffiti;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -35,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import perihelion.io.fourply.R;
 import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.ui.GraffitiView;
 import yuku.ambilwarna.AmbilWarnaDialog;

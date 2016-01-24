@@ -1,4 +1,4 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.graffiti;
 
 import android.Manifest;
 import android.app.Activity;
@@ -32,6 +32,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import perihelion.io.fourply.R;
+import perihelion.io.fourply.graffiti.FourplyCameraView;
+import perihelion.io.fourply.graffiti.GraffitiActivity;
 
 /**
  * Created by vmagro on 1/23/16.

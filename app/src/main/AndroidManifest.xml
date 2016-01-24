@@ -63,11 +63,11 @@
             android:name=".chat.ChatActivity"
             android:exported="true" />
         <activity
-            android:name=".GraffitiActivity"
+            android:name=".graffiti.GraffitiActivity"
             android:screenOrientation="portrait"
             android:exported="true"/>
         <activity
-            android:name=".ARGraffitiActivity"
+            android:name=".graffiti.ARGraffitiActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
