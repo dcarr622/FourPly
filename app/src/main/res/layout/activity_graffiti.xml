@@ -17,6 +17,7 @@
 
     <!-- ALLLLLLL of the Buttonsssss-->
     <LinearLayout
+        android:id="@+id/container_master"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom|end"
@@ -25,24 +26,16 @@
         android:layout_marginTop="@dimen/brush_preview_margin"
         android:orientation="vertical"
         >
-
-        <!-- Your Brushes-->
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <!--Brushes-->
+        <LinearLayout
+            android:id="@+id/ll_brushes"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_alignParentStart="true"
+            android:gravity="right"
             android:layout_marginBottom="@dimen/brush_preview_margin">
-
-            <!--Brushes-->
-            <LinearLayout
-                android:id="@+id/ll_brushes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_alignParentStart="true"
-                android:gravity="right"
-                android:layout_toLeftOf="@+id/btn_brush"/>
-
+            <!--android:paddingEnd="60dp"-->
             <!-- Expand Brushes Icon-->
             <ImageButton
                 android:id="@+id/btn_brush"
@@ -59,7 +52,7 @@
                 android:padding="12dp"
                 android:onClick="onClick"
                 />
-        </RelativeLayout>
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/btn_clear"
