@@ -1,12 +1,14 @@
 package perihelion.io.fourply.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.parse.GetDataCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -47,8 +49,7 @@ public class Bathroom extends ParseObject {
     }
 
     public interface GraffitiListener {
-        void onComplete(String path);
-        void onError();
+        void onComplete();
     }
 
     public void setGraffiti(String path) {
@@ -56,31 +57,39 @@ public class Bathroom extends ParseObject {
         ParseFile fileObject = new ParseFile(inputFile);
         fileObject.saveInBackground();
         put("graffiti", fileObject);
-        saveInBackground();
-    }
-
-    public void getGraffiti(Context ctx, final GraffitiListener listener) {
-        ParseFile fileObject = getParseFile("graffiti");
-        final File outputFile = new File(ctx.getFilesDir(), getName() + ".png");
-        fileObject.getDataInBackground(new GetDataCallback() {
+        saveInBackground(new SaveCallback() {
             @Override
-            public void done(byte[] data, ParseException e) {
-                if (e == null) {
-                    try {
-                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outputFile));
-                        bos.write(data);
-                        bos.flush();
-                        bos.close();
-                        listener.onComplete(outputFile.getPath());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        listener.onError();
-                    }
-                } else {
-                    listener.onError();
-                }
+            public void done(ParseException e) {
+                Log.d("PARSE", "done saving image");
             }
         });
+    }
+
+    public void getGraffiti(final Context ctx, final GraffitiListener listener) {
+        ParseFile fileObject = getParseFile("graffiti");
+        if (fileObject != null) {
+            fileObject.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    if (e == null) {
+                        try {
+                            BufferedOutputStream bos = new BufferedOutputStream(ctx.openFileOutput(getObjectId() + ".png", Context.MODE_PRIVATE));
+                            bos.write(data);
+                            bos.flush();
+                            bos.close();
+                            listener.onComplete();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                            listener.onComplete();
+                        }
+                    } else {
+                        listener.onComplete();
+                    }
+                }
+            });
+        } else {
+            listener.onComplete();
+        }
     }
 
     public double getLat() {

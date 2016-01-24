@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mRecyclerView = (RecyclerView) findViewById(R.id.bathroom_list);
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         RecyclerViewHeader header = (RecyclerViewHeader) findViewById(R.id.header);
         header.attachTo(mRecyclerView, true);
@@ -102,21 +103,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .addApi(LocationServices.API)
                     .build();
         }
-
-        ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
-        bathrooms.findInBackground(new FindCallback<Bathroom>() {
-            public void done(List<Bathroom> bathrooms, ParseException exception) {
-                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, mRecyclerView, bathrooms);
-                mRecyclerView.setAdapter(adapter);
-                for (Bathroom bathroom: bathrooms) {
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
-                            .title(bathroom.getName())
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
-                    mBathroomMarkers.put(marker, bathroom);
-                }
-            }
-        });
 
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
@@ -158,6 +144,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
+        ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
+        bathrooms.findInBackground(new FindCallback<Bathroom>() {
+            public void done(List<Bathroom> bathrooms, ParseException exception) {
+                BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, mRecyclerView, bathrooms);
+                mRecyclerView.setAdapter(adapter);
+                for (Bathroom bathroom: bathrooms) {
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
+                            .title(bathroom.getName())
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                    mBathroomMarkers.put(marker, bathroom);
+                }
+            }
+        });
     }
 
     @Override
@@ -179,9 +180,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void updateLocation() {
         try {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            mLat = (float) lastLocation.getLatitude();
-            mLng = (float) lastLocation.getLongitude();
             if (lastLocation != null) {
+                mLat = (float) lastLocation.getLatitude();
+                mLng = (float) lastLocation.getLongitude();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 18));
             }
         } catch (SecurityException e) {
