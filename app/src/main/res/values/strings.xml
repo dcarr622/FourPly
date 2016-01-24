@@ -17,5 +17,8 @@
     <string name="on_the_way">Your order is on the way!</string>
     <string name="review_saved">Your review has been submitted!</string>
     <string name="nearby_bathrooms">NEARBY BATHROOMS</string>
+    <string name="notifaction_success">Successfully uploaded Bathroom</string>
+    <string name="notification_progress">Uploading Bathroom...</string>
+    <string name="notification_fail">Bathroom failed to upload...</string>
     <string name="no_reviews">No reviews</string>
 </resources>
