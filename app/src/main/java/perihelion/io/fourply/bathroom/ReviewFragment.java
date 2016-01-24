@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.parse.ParseACL;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import perihelion.io.fourply.R;
@@ -74,6 +76,9 @@ public class ReviewFragment extends DialogFragment implements View.OnClickListen
         switch(v.getId()){
             case R.id.btn_ok:
                 Review review = new Review(subject.getText().toString(), message.getText().toString(), rating.getRating(), id);
+                review.setACL(new ParseACL(ParseUser.getCurrentUser()));
+                review.getACL().setPublicReadAccess(true);
+                review.getACL().setPublicWriteAccess(true);
                 review.saveInBackground();
                 dismiss();
                 break;

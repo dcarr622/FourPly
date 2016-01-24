@@ -2,6 +2,9 @@ package perihelion.io.fourply.imgur.services;
 
 import android.content.Context;
 
+import com.parse.ParseACL;
+import com.parse.ParseUser;
+
 import java.lang.ref.WeakReference;
 
 import perihelion.io.fourply.data.Bathroom;
@@ -79,6 +82,9 @@ public class UploadService {
                             notificationHelper.createUploadedNotification(imageResponse);
                             String url = imageResponse.data.link;
                             Bathroom room = new Bathroom(mName, mDescription, url, mLat, mLng);
+                            room.setACL(new ParseACL(ParseUser.getCurrentUser()));
+                            room.getACL().setPublicReadAccess(true);
+                            room.getACL().setPublicWriteAccess(true);
                             room.saveInBackground();
                         }
                     }

@@ -99,6 +99,16 @@ public class BathroomActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        FloatingActionButton reviewfab = (FloatingActionButton) findViewById(R.id.reviewfab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                ReviewFragment reviewFragment = ReviewFragment.createInstance(bathroom);
+                reviewFragment.show(fm, null);
+            }
+        });
     }
 
     @Override
