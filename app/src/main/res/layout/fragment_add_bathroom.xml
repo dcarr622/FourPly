@@ -4,37 +4,44 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <FrameLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/iv_bathroom"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"/>
-
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            >
+            <ImageView
+                android:id="@+id/addbanner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:background="@color/dark_grey"
+                android:src="@drawable/ic_add_white_36dp"
+                android:padding="100dp"
+                />
+        </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="@drawable/bkgrnd_text"
             android:orientation="vertical"
-            android:layout_gravity="bottom">
-
-                <EditText
-                    android:id="@+id/field_subject"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:hint="Subject"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:textSize="25sp"
-                    android:inputType="textAutoCorrect|textAutoComplete|textCapWords"/>
-
+            android:layout_gravity="bottom"
+            >
+            <EditText
+                android:id="@+id/field_subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="Name"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="25sp"
+                android:inputType="textAutoCorrect|textAutoComplete|textCapWords"
+                />
         </FrameLayout>
-
     </FrameLayout>
 
     <LinearLayout
@@ -44,40 +51,29 @@
         android:layout_gravity="bottom"
         android:background="@android:color/white"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp">
-
-        <RatingBar
-            style="@style/rollrating"
-            android:id="@+id/rate_rolls"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:progress="3"
-            android:max="5"
-            android:stepSize="1" />
-
+        android:paddingEnd="16dp"
+        >
         <EditText
             android:id="@+id/field_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
-            android:hint="Enter your message here..."
+            android:hint="Enter your description here..."
             android:inputType="textAutoCorrect|textAutoComplete|textCapSentences|textImeMultiLine|textMultiLine"
             android:lines="3"
-            android:maxLines="3" />
-
+            android:maxLines="3"
+            />
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@android:color/darker_gray" />
-
+            android:background="@android:color/darker_gray"
+            />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:background="@android:color/white">
-
             <Button
                 style="@style/BorderlessButtonStyle"
                 android:id="@+id/btn_cancel"
@@ -86,7 +82,6 @@
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/darker_gray"
                 android:text="Cancel"/>
-
             <Button
                 style="@style/BorderlessButtonStyle"
                 android:id="@+id/btn_ok"
@@ -95,8 +90,8 @@
                 android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:textColor="?attr/colorPrimaryDark"
-                android:text="Rate!" />
-
+                android:text="Submit"
+                />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

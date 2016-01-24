@@ -34,6 +34,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.parse:parse-android:1.12.0'
     compile 'com.android.support:design:23.1.1'
     compile 'com.firebase:firebase-client-android:2.5.0'
@@ -42,5 +43,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.github.yukuku:ambilwarna:2.0.1'
+    compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile project(':libs:opencv')
 }

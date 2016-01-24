@@ -1,6 +1,7 @@
 package perihelion.io.fourply;
 
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +9,13 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -30,10 +33,12 @@ import perihelion.io.fourply.data.Review;
 
 public class BathroomActivity extends AppCompatActivity {
 
-    private String bathroomName = "PennApps Bathroom";
-    private String bathroomID = "E8VjTcnzRu";
-    private float numRolls = 3.7f;
+    private String bathroomName;
+    private String bathroomID;
+    private RatingBar ratingBar;
     private Bathroom bathroom;
+    private TextView ratingText;
+    private LinearLayout reviewsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +58,6 @@ public class BathroomActivity extends AppCompatActivity {
         CollapsingToolbarLayout layout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         layout.setTitle(bathroomName);
 
-
         ParseQuery<Bathroom> bathrooms = ParseQuery.getQuery(Bathroom.class);
         bathrooms.getInBackground(bathroomID, new GetCallback<Bathroom>() {
             @Override
@@ -63,31 +67,69 @@ public class BathroomActivity extends AppCompatActivity {
             }
         });
 
+        ratingBar = (RatingBar) findViewById(R.id.num_rolls_bar);
+        ratingText = (TextView) findViewById(R.id.rollquantity);
+        reviewsList = (LinearLayout) findViewById(R.id.reviews_list);
+
+        TextView emergency = (TextView) findViewById(R.id.emergencyButton);
+        emergency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent postmatesIntent = new Intent(BathroomActivity.this, PostmatesActivity.class);
+                startActivity(postmatesIntent);
+            }
+        });
+
+        TextView leaveReview = (TextView) findViewById(R.id.leaveRatingButton);
+        leaveReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                ReviewFragment reviewFragment = ReviewFragment.createInstance(bathroom);
+                reviewFragment.show(fm, null);
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         ParseQuery<Review> reviews = ParseQuery.getQuery(Review.class);
         reviews.whereEqualTo("parent", bathroomID);
         reviews.findInBackground(new FindCallback<Review>() {
             @Override
-            public void done(List<Review> objects, ParseException e) {
+            public void done(List<Review> reviews, ParseException e) {
                 if (e == null) {
-                    for (Review review : objects) {
-                        numRolls += review.getRolls();
+                    reviewsList.removeAllViews();
+                    Log.d("REVIEWs", "found : " + reviews.size());
+                    float numRolls = 0.0f;
+                    for (Review review : reviews) {
+                        numRolls += review.getRating();
+                        View view = View.inflate(BathroomActivity.this, R.layout.review_list_item, null);
+                        TextView subject = (TextView) view.findViewById(R.id.subject);
+                        subject.setText(review.getSubject());
+                        TextView message = (TextView) view.findViewById(R.id.message);
+                        message.setText(review.getMessage());
+                        RatingBar rating = (RatingBar) view.findViewById(R.id.tiny_rolls_bar);
+                        rating.setRating(review.getRating());
+                        reviewsList.addView(view);
                     }
-                    numRolls /= objects.size();
+                    numRolls /= reviews.size();
+                    ratingBar.setRating(numRolls);
+                    ratingText.setText(String.format(getString(R.string.ratingunit), numRolls));
                 }
             }
         });
-
-        RatingBar rolls = (RatingBar) findViewById(R.id.num_rolls_bar);
-        rolls.setRating(numRolls);
-
-        TextView rollamt = (TextView) findViewById(R.id.rollquantity);
-        rollamt.setText(String.format(getString(R.string.ratingunit), numRolls));
     }
 
     private void setupView(){
         //Setup Hero Image
         ImageView hero = (ImageView) findViewById(R.id.heroImage);
         Picasso.with(BathroomActivity.this).load(bathroom.getHeroImage()).into(hero);
+
+        TextView description = (TextView) findViewById(R.id.description);
+        description.setText(bathroom.getDescription());
 
         //Setup the Fab
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
