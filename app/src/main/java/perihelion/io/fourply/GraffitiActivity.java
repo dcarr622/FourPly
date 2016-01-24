@@ -52,6 +52,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
 
     private LinearLayout container;
     private GraffitiView graffitiView;
+    private ImageView backgroundView;
     private ArrayList<Bitmap> brushList = new ArrayList<>();
     private String bathroomId = null;
     private boolean isBrushesOpen = false;
@@ -70,6 +71,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
 
         container = (LinearLayout) findViewById(R.id.ll_brushes);
         graffitiView = (GraffitiView) findViewById(R.id.gv_grafitti);
+        backgroundView = (ImageView) findViewById(R.id.iv_background);
 
         //Load the bathroom Id if it is saved
         if(bathroomId != null)
@@ -123,8 +125,11 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         FileInputStream in = null;
         try {
             in = openFileInput(bathroomId + ".png");
-            Bitmap bitmap = BitmapFactory.decodeStream(in);
-            graffitiView.setBitmap(bitmap);
+            Bitmap graffitiBitmap = BitmapFactory.decodeStream(in);
+            graffitiView.setBitmap(graffitiBitmap);
+            in = openFileInput(bathroomId + "bkg.png");
+            Bitmap backgroundBitmap = BitmapFactory.decodeStream(in);
+            backgroundView.setImageBitmap(backgroundBitmap);
             Log.d(getClass().getSimpleName(), "Set the bitmap");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -149,7 +154,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                 public void done(Bathroom bathroom, ParseException e) {
                     Log.d("PARSE", "got bathroom");
                     bathroom.setGraffiti(getFilesDir() + "/" + bathroomId + ".png");
-                    ((ImageView) findViewById(R.id.iv_background)).setImageBitmap(graffitiView.getBitmap());
+//                    ((ImageView) findViewById(R.id.iv_background)).setImageBitmap(graffitiView.getBitmap());
                 }
             });
             // PNG is a lossless format, the compression factor (100) is ignored

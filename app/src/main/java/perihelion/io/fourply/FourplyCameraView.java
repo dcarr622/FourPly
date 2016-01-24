@@ -282,10 +282,7 @@ public class FourplyCameraView extends CameraBridgeViewBase implements Camera.Pr
             if (mRotated != null) mRotated.release();
         }
 
-
     }
-
-    ;
 
     private class CameraWorker implements Runnable {
 
