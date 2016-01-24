@@ -36,6 +36,16 @@ public class FourplyCameraView extends CameraBridgeViewBase implements Camera.Pr
     protected JavaCameraFrame[] mCameraFrame;
     private SurfaceTexture mSurfaceTexture;
     private int mCameraId;
+    private int originalWidth;
+    private int originalHeight;
+
+    public int getOriginalWidth() {
+        return originalWidth;
+    }
+
+    public int getOriginalHeight() {
+        return originalHeight;
+    }
 
     public static class JavaCameraSizeAccessor implements ListItemAccessor {
 
@@ -188,7 +198,9 @@ public class FourplyCameraView extends CameraBridgeViewBase implements Camera.Pr
      */
     /* First step - initialize camera connection */
         Log.d(TAG, "Connecting to camera");
-        if (!initializeCamera(width / 4, height / 4))
+        this.originalWidth = width;
+        this.originalHeight = height;
+        if (!initializeCamera(width / 2, height / 2))
             return false;
 
     /* now we can start update thread */
