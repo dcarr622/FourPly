@@ -49,7 +49,7 @@ public class NotificationHelper {
         mBuilder.setSmallIcon(android.R.drawable.ic_menu_gallery);
         mBuilder.setContentTitle(mContext.get().getString(R.string.notifaction_success));
 
-        mBuilder.setContentText(response.data.link);
+        //mBuilder.setContentText(response.data.link);
 
         mBuilder.setColor(mContext.get().getResources().getColor(R.color.pink_a700));
 

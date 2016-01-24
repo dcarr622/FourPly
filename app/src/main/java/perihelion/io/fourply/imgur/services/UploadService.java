@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.lang.ref.WeakReference;
 
+import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.imgur.Constants;
 import perihelion.io.fourply.imgur.helpers.NotificationHelper;
 import perihelion.io.fourply.imgur.imgurmodel.ImageResponse;
@@ -26,8 +27,17 @@ public class UploadService {
 
     private WeakReference<Context> mContext;
 
-    public UploadService(Context context) {
+    private String mName;
+    private String mDescription;
+    private float mLng;
+    private float mLat;
+
+    public UploadService(Context context, String name, String description, float lat, float lng) {
         this.mContext = new WeakReference<>(context);
+        mName = name;
+        mDescription = description;
+        mLat = lat;
+        mLng = lng;
     }
 
     public void Execute(Upload upload, Callback<ImageResponse> callback) {
@@ -67,6 +77,9 @@ public class UploadService {
                         */
                         if (imageResponse.success) {
                             notificationHelper.createUploadedNotification(imageResponse);
+                            String url = imageResponse.data.link;
+                            Bathroom room = new Bathroom(mName, mDescription, url, mLat, mLng);
+                            room.saveInBackground();
                         }
                     }
 
