@@ -3,7 +3,6 @@ package perihelion.io.fourply;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,7 +35,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.ui.GraffitiView;
 import yuku.ambilwarna.AmbilWarnaDialog;

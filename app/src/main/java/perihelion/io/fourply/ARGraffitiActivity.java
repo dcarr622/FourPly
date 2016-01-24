@@ -64,7 +64,9 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             Bitmap graffitiBitmap = BitmapFactory.decodeStream(in);
             overlay = new Mat();
             Utils.bitmapToMat(graffitiBitmap, overlay);
+            Log.d(TAG, "imported graffiti");
         } catch (FileNotFoundException e) {
+            Log.d(TAG, "graffiti import failed");
             e.printStackTrace();
         }
 
@@ -75,6 +77,7 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         findViewById(R.id.root).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick - img requested");
                 mDrawTapRequested = true;
             }
         });
@@ -138,24 +141,8 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         final Mat input = inputFrame.rgba().clone();
         long start = System.currentTimeMillis();
-        ExecutorService executor = Executors.newCachedThreadPool();
-        Callable<Object> task = new Callable<Object>() {
-            public Object call() {
-                processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
-                return null;
-            }
-        };
-        Future<Object> future = executor.submit(task);
-        try {
-            future.get(500, TimeUnit.MILLISECONDS);
-        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
-            // handle the timeout
-            Log.w(TAG, "frame processing timed out");
-            return input;
-        } finally {
-            future.cancel(true);
-        }
         if (mDrawTapRequested) {
+            Log.d(TAG, "mDrawTapRequested saving image");
             mDrawTapRequested = false;
             try {
                 FileOutputStream out = openFileOutput(getIntent().getStringExtra("id") + "bkg.png", Context.MODE_PRIVATE);
@@ -171,7 +158,23 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             finish();
         }
         if (overlay != null) {
-            processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
+            ExecutorService executor = Executors.newCachedThreadPool();
+            Callable<Object> task = new Callable<Object>() {
+                public Object call() {
+                    processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
+                    return null;
+                }
+            };
+            Future<Object> future = executor.submit(task);
+            try {
+                future.get(1000, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+                //handle the timeout
+                Log.w(TAG, "frame processing timed out");
+                return input;
+            } finally {
+                future.cancel(true);
+            }
         }
         long end = System.currentTimeMillis();
         Log.i(TAG, (end - start) + "ms");
