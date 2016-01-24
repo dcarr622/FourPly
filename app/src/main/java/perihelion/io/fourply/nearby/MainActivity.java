@@ -41,9 +41,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import perihelion.io.fourply.R;
 import perihelion.io.fourply.bathroom.AddBathroomFragment;
 import perihelion.io.fourply.bathroom.BathroomActivity;
-import perihelion.io.fourply.R;
 import perihelion.io.fourply.data.Bathroom;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener {
