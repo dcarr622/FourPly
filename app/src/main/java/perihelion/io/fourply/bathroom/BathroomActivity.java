@@ -117,8 +117,12 @@ public class BathroomActivity extends AppCompatActivity {
                         reviewsList.addView(view);
                     }
                     numRolls /= reviews.size();
-                    ratingBar.setRating(numRolls);
-                    ratingText.setText(String.format(getString(R.string.ratingunit), numRolls));
+                    if (numRolls > 0) {
+                        ratingBar.setRating(numRolls);
+                        ratingText.setText(String.format(getString(R.string.ratingunit), numRolls));
+                    } else {
+                        ratingText.setText(getString(R.string.no_reviews));
+                    }
                 }
             }
         });

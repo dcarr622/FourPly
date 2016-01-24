@@ -43,8 +43,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="14dp"
                     android:layout_toRightOf="@id/num_rolls_bar"
-                    android:layout_centerVertical="true"
-                    android:text="test"/>
+                    android:layout_centerVertical="true" />
 
             </RelativeLayout>
 
