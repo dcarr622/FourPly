@@ -12,6 +12,14 @@ public class Bathroom extends ParseObject {
 
     public Bathroom() {}
 
+    public Bathroom(String name, String description, String url, float lat, float lng) {
+        put("name", name);
+        put("description", description);
+        put("heroImage", url);
+        put("lat", lat);
+        put("lng", lng);
+    }
+
     public String getHeroImage() {
         return getString("heroImage");
     }

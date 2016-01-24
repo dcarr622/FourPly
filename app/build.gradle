@@ -45,4 +45,6 @@ dependencies {
     compile 'com.github.yukuku:ambilwarna:2.0.1'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile project(':libs:opencv')
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }

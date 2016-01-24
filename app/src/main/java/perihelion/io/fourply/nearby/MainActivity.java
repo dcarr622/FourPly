@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     private RecyclerView mRecyclerView;
     private Map<Marker, Bathroom> mBathroomMarkers = new HashMap<>();
+    private float mLat;
+    private float mLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void updateLocation() {
         try {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mLat = (float) lastLocation.getLatitude();
+            mLng = (float) lastLocation.getLongitude();
             if (lastLocation != null) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 18));
             }
@@ -215,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialogFragment = AddBathroomFragment.createInstance();
+                DialogFragment dialogFragment = AddBathroomFragment.createInstance(mLat, mLng);
                 FragmentTransaction manager = getFragmentManager().beginTransaction();
                 manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 dialogFragment.show(manager, "Review");

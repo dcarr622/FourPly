@@ -29,7 +29,7 @@
             android:layout_gravity="bottom"
             >
             <EditText
-                android:id="@+id/field_subject"
+                android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -54,7 +54,7 @@
         android:paddingEnd="16dp"
         >
         <EditText
-            android:id="@+id/field_body"
+            android:id="@+id/field_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
