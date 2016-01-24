@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         mRecyclerView = (RecyclerView) findViewById(R.id.bathroom_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //RecyclerViewHeader header = RecyclerViewHeader.fromXml(this, R.layout.nearby_header);
-        //header.attachTo(mRecyclerView);
+        RecyclerViewHeader header = (RecyclerViewHeader) findViewById(R.id.header);
+        header.attachTo(mRecyclerView, true);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
