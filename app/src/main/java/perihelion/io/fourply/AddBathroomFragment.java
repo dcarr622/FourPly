@@ -10,11 +10,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +25,23 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import perihelion.io.fourply.data.Bathroom;
 
 public class AddBathroomFragment extends DialogFragment implements View.OnClickListener {
 
     private String id;
     private String image;
+    private String TAG="AddBathroomFragment";
+
+    @Bind(R.id.imagedummy)
+    ImageView uploadImage;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -42,6 +55,7 @@ public class AddBathroomFragment extends DialogFragment implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(getActivity());
     }
 
     @Nullable
@@ -70,12 +84,36 @@ public class AddBathroomFragment extends DialogFragment implements View.OnClickL
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_ok:
+                File image = null;
+                try {
+                    image = createImageFile();
+                } catch (IOException e) {
+                    Log.e(TAG, "Error fetching camera file");
+                    return;
+                }
 
                 break;
             case R.id.btn_cancel:
                 dismiss();
                 break;
         }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String mCurrentPhotoPath;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(null);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
     }
 
     private void dispatchTakePictureIntent() {
