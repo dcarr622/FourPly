@@ -281,8 +281,6 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }
