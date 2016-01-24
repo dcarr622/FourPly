@@ -133,7 +133,7 @@ public class BathroomActivity extends AppCompatActivity {
         description.setText(bathroom.getDescription());
 
         //Setup the Fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.reviewfab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
