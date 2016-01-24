@@ -101,7 +101,7 @@ public class BathroomActivity extends AppCompatActivity {
         });
 
         FloatingActionButton reviewfab = (FloatingActionButton) findViewById(R.id.reviewfab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        reviewfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getFragmentManager();
