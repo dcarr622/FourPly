@@ -216,7 +216,16 @@ void drawGraffiti(Mat& m, Mat& overlay) {
     circle(m, lastFrame.bottomLeft * scaleFactor, 5, Scalar(0, 0, 255), -1);
     circle(m, lastFrame.bottomRight * scaleFactor, 5, Scalar(0, 255, 255), -1);
 
-    cv::add(m, warped, m);
+    for(int y=0;y<m.rows;y++)
+        for(int x=0;x<m.cols;x++)
+        {
+            //int alpha = ov.at<Vec4b>(y,x)[3];
+            int alpha = 256 * (x+y)/(m.rows+m.cols);
+            m.at<Vec3b>(y,x)[0] = (1-alpha/256.0) * m.at<Vec3b>(y,x)[0] + (alpha * warped.at<Vec3b>(y,x)[0] / 256);
+            m.at<Vec3b>(y,x)[1] = (1-alpha/256.0) * m.at<Vec3b>(y,x)[1] + (alpha * warped.at<Vec3b>(y,x)[1] / 256);
+            m.at<Vec3b>(y,x)[2] = (1-alpha/256.0) * m.at<Vec3b>(y,x)[2] + (alpha * warped.at<Vec3b>(y,x)[2] / 256);
+        }
+    /* cv::add(m, warped, m); */
 }
 
 
