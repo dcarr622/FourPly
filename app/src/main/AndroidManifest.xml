@@ -71,9 +71,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
-            android:name=".bathroom.PostmatesActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".bathroom.EmergencyActivity"
             android:label="@string/title_activity_emergency"
             android:theme="@style/AppTheme.NoActionBar"></activity>
