@@ -200,7 +200,7 @@ public class FourplyCameraView extends CameraBridgeViewBase implements Camera.Pr
         Log.d(TAG, "Connecting to camera");
         this.originalWidth = width;
         this.originalHeight = height;
-        if (!initializeCamera(width / 2, height / 2))
+        if (!initializeCamera(width, height))
             return false;
 
     /* now we can start update thread */

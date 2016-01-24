@@ -24,14 +24,21 @@ import org.opencv.core.Mat;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by vmagro on 1/23/16.
  */
 public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
-    public native int processMat(long matAddrM, long matAddrOverlay);
+    public native void processMat(long matAddrM, long matAddrOverlay);
+
     private static final String TAG = "ARGraffiti";
     private static final int PERMISSION_REQUEST_CAMERA = 42;
     private boolean mDrawTapRequested = false;
@@ -130,8 +137,25 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        Mat input = inputFrame.rgba().clone();
+        final Mat input = inputFrame.rgba().clone();
         long start = System.currentTimeMillis();
+        ExecutorService executor = Executors.newCachedThreadPool();
+        Callable<Object> task = new Callable<Object>() {
+            public Object call() {
+                processMat(input.getNativeObjAddr(), overlay.getNativeObjAddr());
+                return null;
+            }
+        };
+        Future<Object> future = executor.submit(task);
+        try {
+            future.get(500, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+            // handle the timeout
+            Log.w(TAG, "frame processing timed out");
+            return input;
+        } finally {
+            future.cancel(true);
+        }
         if (mDrawTapRequested) {
             Log.d("ARG", "exporting bitmap");
             mDrawTapRequested = false;
