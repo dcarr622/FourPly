@@ -24,14 +24,26 @@
             app:expandedTitleTextAppearance="@style/TransparentText"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <fragment
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:name="com.google.android.gms.maps.MapFragment"
-                android:id="@+id/map"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent">
+
+                <fragment
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:fitsSystemWindows="true"
+                    app:layout_collapseMode="parallax"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:layout_width="122dp"
+                    android:layout_height="122dp"
+                    android:background="@drawable/avatar_blue"
+                    android:layout_gravity="top|start"/>
+
+            </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -49,8 +61,7 @@
         android:id="@+id/bathroom_list"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="perihelion.io.fourply.nearby.MainActivity"
-        tools:showIn="@layout/activity_main">
-    </android.support.v7.widget.RecyclerView>  />
+        tools:showIn="@layout/activity_main" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

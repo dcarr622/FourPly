@@ -35,26 +35,22 @@ public class AddBathroomFragment extends DialogFragment implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        id = args.getString("id");
-        image = args.getString("image");
+    }
 
-        ImageView add = (ImageView) getView().findViewById(R.id.addbanner);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_bathroom, null);
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(this);
+        view.findViewById(R.id.btn_ok).setOnClickListener(this);
+        ImageView add = (ImageView) view.findViewById(R.id.addbanner);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
             }
         });
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_review_dialog, null);
-
-        view.findViewById(R.id.btn_cancel).setOnClickListener(this);
-        view.findViewById(R.id.btn_ok).setOnClickListener(this);
         return view;
     }
 
