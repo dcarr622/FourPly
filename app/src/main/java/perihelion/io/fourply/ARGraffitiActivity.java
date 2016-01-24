@@ -44,7 +44,7 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         }
     }
 
-    private CameraBridgeViewBase mOpenCvCameraView = null;
+    private FourplyCameraView mOpenCvCameraView = null;
 
     private Mat overlay = null;
 
@@ -59,7 +59,7 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.camera);
+        mOpenCvCameraView = (FourplyCameraView) findViewById(R.id.camera);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
@@ -121,7 +121,8 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat input = inputFrame.rgba();
-        return this.processMat(input);
+        Mat output = this.processMat(input);
+        return output;
     }
 
     private static Point pointOnLineRaw(double rho, double theta, double distance) {
@@ -225,21 +226,54 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
         return corners.get(0);
     }
 
+    private static class GraffitiFrame {
+        public Point topLeft;
+        public Point topRight;
+        public Point bottomLeft;
+        public Point bottomRight;
+        public boolean valid;
+    }
+
+    private static boolean drawGraffiti(Mat img, Mat overlay, GraffitiFrame frame) {
+        List<Point> fromCorners = Arrays.asList(
+                new Point(0, 0), new Point(overlay.width(), 0), new Point(0, overlay.height()), new Point(overlay.width(), overlay.height()));
+        List<Point> toCorners = Arrays.asList(frame.topLeft, frame.topRight, frame.bottomLeft, frame.bottomRight);
+        Mat from = Converters.vector_Point2f_to_Mat(fromCorners);
+        Mat to = Converters.vector_Point2f_to_Mat(toCorners);
+        Mat warp = Imgproc.getPerspectiveTransform(from, to);
+        Mat warpedOverlay = new Mat();
+        Imgproc.warpPerspective(overlay, warpedOverlay, warp, img.size());
+
+        Imgproc.circle(img, frame.topLeft, 5, new Scalar(255, 0, 0), -1);
+        Imgproc.circle(img, frame.topRight, 5, new Scalar(0, 255, 0), -1);
+        Imgproc.circle(img, frame.bottomLeft, 5, new Scalar(0, 0, 255), -1);
+        Imgproc.circle(img, frame.bottomRight, 5, new Scalar(255, 255, 0), -1);
+
+        try {
+            Core.add(img, warpedOverlay, img);
+        } catch (CvException ex) {
+            Log.e(TAG, "Couldn't add images");
+            return false;
+        }
+        return true;
+    }
+
+    private GraffitiFrame lastFrame = new GraffitiFrame();
+    private int lastFrameCounter = 0;
+    final double angleThreshold = Math.PI / 6;
+    final int cannyThreshold = 50;
+
     private Mat processMat(Mat m) {
         Mat gray = new Mat(m.rows(), m.cols(), CvType.CV_8UC1);
         Imgproc.cvtColor(m, gray, Imgproc.COLOR_RGB2GRAY);
-        Mat blur = new Mat();
-        Imgproc.bilateralFilter(gray, blur, 11, 17, 17);
-        final int threshold = 50;
         Mat canny = new Mat();
-        Imgproc.Canny(blur, canny, threshold, threshold * 3, 3, true);
+        Imgproc.Canny(gray, canny, cannyThreshold, cannyThreshold * 3, 3, true);
 
         Mat houghLines = new Mat();
         Imgproc.HoughLines(canny, houghLines, 1, Math.PI / 180, 100);
 
         List<double[]> horizontalLines = new LinkedList<>();
         List<double[]> verticalLines = new LinkedList<>();
-        final double angleThreshold = Math.PI / 6;
         for (int i = 0; i < houghLines.rows(); i++) {
             final double[] line = houghLines.get(i, 0);
             final double theta = line[1];
@@ -254,12 +288,12 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
             }
         }
 
-        for (double[] horizontal : horizontalLines) {
-            Imgproc.line(m, pointOnLineRaw(horizontal[0], horizontal[1], 1000), pointOnLineRaw(horizontal[0], horizontal[1], -1000), new Scalar(0, 0, 255), 1);
-        }
-        for (double[] vertical : verticalLines) {
-            Imgproc.line(m, pointOnLineRaw(vertical[0], vertical[1], 1000), pointOnLineRaw(vertical[0], vertical[1], -1000), new Scalar(0, 0, 255), 1);
-        }
+//        for (double[] horizontal : horizontalLines) {
+//            Imgproc.line(m, pointOnLineRaw(horizontal[0], horizontal[1], 1000), pointOnLineRaw(horizontal[0], horizontal[1], -1000), new Scalar(0, 0, 255), 1);
+//        }
+//        for (double[] vertical : verticalLines) {
+//            Imgproc.line(m, pointOnLineRaw(vertical[0], vertical[1], 1000), pointOnLineRaw(vertical[0], vertical[1], -1000), new Scalar(0, 0, 255), 1);
+//        }
 
         List<Corner> corners = findCorners(horizontalLines, verticalLines, m.cols(), m.rows());
         if (corners.size() != 0) {
@@ -268,30 +302,27 @@ public class ARGraffitiActivity extends Activity implements CameraBridgeViewBase
 
             double doorWidth = distance(topLeft.p, topRight.p);
             double graffitiHeight = doorWidth * (640 / 480);
-            Point bottomLeft = pointOnLine(topLeft.vertical[1], topLeft.p, graffitiHeight);
-            Point bottomRight = pointOnLine(topRight.vertical[1], topRight.p, graffitiHeight);
 
-            List<Point> fromCorners = Arrays.asList(
-                    new Point(0, 0), new Point(overlay.width(), 0), new Point(0, overlay.height()), new Point(overlay.width(), overlay.height()));
-            List<Point> toCorners = Arrays.asList(topLeft.p, topRight.p, bottomLeft, bottomRight);
-            Mat from = Converters.vector_Point2f_to_Mat(fromCorners);
-            Mat to = Converters.vector_Point2f_to_Mat(toCorners);
-            Mat warp = Imgproc.getPerspectiveTransform(from, to);
-            Mat warpedOverlay = new Mat();
-            Imgproc.warpPerspective(overlay, warpedOverlay, warp, m.size());
-            try {
-                Core.add(m, warpedOverlay, m);
-            } catch (CvException ex) {
-                Log.e(TAG, "Couldn't add images");
-            }
-
-            Imgproc.circle(m, topLeft.p, 5, new Scalar(255, 0, 0), -1);
-            Imgproc.circle(m, topRight.p, 5, new Scalar(0, 255, 0), -1);
-            Imgproc.circle(m, bottomLeft, 5, new Scalar(0, 0, 255), -1);
-            Imgproc.circle(m, bottomRight, 5, new Scalar(255, 255, 0), -1);
+            lastFrame.topLeft = topLeft.p;
+            lastFrame.topRight = topRight.p;
+            lastFrame.bottomLeft = pointOnLine(topLeft.vertical[1], topLeft.p, graffitiHeight);
+            lastFrame.bottomRight = pointOnLine(topRight.vertical[1], topRight.p, graffitiHeight);
+            lastFrame.valid = true;
+            drawGraffiti(m, overlay, lastFrame);
+            lastFrameCounter = 0;
         } else {
             Log.w(TAG, "Unable to find corners");
+            //if it is within a small number of frames as a previous object, just assume it is in around the same location
+            if (lastFrame.valid && lastFrameCounter < 5) {
+                drawGraffiti(m, overlay, lastFrame);
+                lastFrameCounter++;
+            } else if (lastFrameCounter >= 5) {
+                lastFrame.valid = false;
+            }
         }
+        gray.release();
+        canny.release();
+        houghLines.release();
         return m;
     }
 
