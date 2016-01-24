@@ -151,6 +151,8 @@ void processMat(Mat& m, Mat& overlay) {
             verticalLines.push_back(line);
     }
 
+    std::cout << "Found " << verticalLines.size() << " vertical lines, " << horizontalLines.size() << " horizontal lines" << std::endl;
+
     /* for (auto it = verticalLines.begin(); it != verticalLines.end(); ++it) { */
     /*     Line line = *it; */
     /*     cv::line(m, pointOnLineRaw(line, 1000), pointOnLineRaw(line, -1000), Scalar(0,0,255), 3, CV_AA); */
