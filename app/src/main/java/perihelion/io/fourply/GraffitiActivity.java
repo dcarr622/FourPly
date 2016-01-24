@@ -128,47 +128,8 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
             container.addView(button, 0, lp);
         }
         graffitiView.setBrushList(brushList);
-
-        graffitiView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        if(currentFadingState != STATE_FADING) {
-                            currentFadingState = STATE_FADING;
-                            menuContainer.animate().cancel();
-                            menuContainer.animate()
-                                    .alpha(.4f)
-                                    .setDuration(200)
-                                    .withEndAction(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            currentFadingState = STATE_NAN_TP;
-                                        }
-                                    }).start();
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        if(currentFadingState != STATE_REVEALING) {
-                            currentFadingState = STATE_REVEALING;
-                            menuContainer.animate().cancel();
-                            menuContainer.animate()
-                                    .alpha(1f)
-                                    .setDuration(200)
-                                    .withEndAction(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            currentFadingState = STATE_NAN_TP;
-                                        }
-                                    }).start();
-                        }
-                        break;
-                }
-                return false;
-            }
-        });
-    }
+        graffitiView.setOnTouchListener(graffitiTouchListener);
+        }
 
     private void loadBitmap() {
         FileInputStream in = null;
@@ -304,5 +265,46 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
+    /**
+     * Fades out the Options when you're drawing
+     */
+    private View.OnTouchListener graffitiTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (currentFadingState != STATE_FADING) {
+                        currentFadingState = STATE_FADING;
+                        menuContainer.animate().cancel();
+                        menuContainer.animate()
+                                .alpha(.4f)
+                                .setDuration(200)
+                                .withEndAction(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        currentFadingState = STATE_NAN_TP;
+                                    }
+                                }).start();
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    if (currentFadingState != STATE_REVEALING) {
+                        currentFadingState = STATE_REVEALING;
+                        menuContainer.animate().cancel();
+                        menuContainer.animate()
+                                .alpha(1f)
+                                .setDuration(200)
+                                .withEndAction(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        currentFadingState = STATE_NAN_TP;
+                                    }
+                                }).start();
+                    }
+                    break;
+            }
+            return false;
+        }
+    };
 }
