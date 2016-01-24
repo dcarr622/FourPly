@@ -26,7 +26,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import perihelion.io.fourply.ARGraffitiActivity;
-import perihelion.io.fourply.GraffitiActivity;
 import perihelion.io.fourply.R;
 import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
@@ -91,23 +90,6 @@ public class BathroomActivity extends AppCompatActivity {
             }
         });
 
-        //Setup the Fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bathroom.getGraffiti(BathroomActivity.this, new Bathroom.GraffitiListener() {
-                    @Override
-                    public void onComplete() {
-                        Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
-                        intent.putExtra("id", bathroomID);
-                        intent.putExtra("name", bathroomName);
-                        startActivity(intent);
-                    }
-                });
-            }
-        });
-
         FloatingActionButton reviewfab = (FloatingActionButton) findViewById(R.id.reviewfab);
         reviewfab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +143,23 @@ public class BathroomActivity extends AppCompatActivity {
 
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(bathroom.getDescription());
+
+        //Setup the Fab
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bathroom.getGraffiti(BathroomActivity.this, new Bathroom.GraffitiListener() {
+                    @Override
+                    public void onComplete() {
+                        Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
+                        intent.putExtra("id", bathroomID);
+                        intent.putExtra("name", bathroomName);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
     }
 
     @Override
