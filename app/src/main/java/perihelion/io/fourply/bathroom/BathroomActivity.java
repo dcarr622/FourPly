@@ -1,4 +1,4 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.bathroom;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import perihelion.io.fourply.R;
 import perihelion.io.fourply.chat.ChatActivity;
 import perihelion.io.fourply.data.Bathroom;
 import perihelion.io.fourply.data.Review;

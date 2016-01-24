@@ -1,19 +1,16 @@
-package perihelion.io.fourply;
+package perihelion.io.fourply.bathroom;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import perihelion.io.fourply.data.Bathroom;
+import perihelion.io.fourply.R;
 
 public class AddBathroomFragment extends DialogFragment implements View.OnClickListener {
 
