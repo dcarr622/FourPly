@@ -1,5 +1,7 @@
 package perihelion.io.fourply;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -13,6 +15,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -44,18 +47,23 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
             R.drawable.brush_paint
     };
 
+    private static final int STATE_NAN_TP = -1;
+    private static final int STATE_FADING = 0;
+    private static final int STATE_REVEALING = 1;
+    private int currentFadingState = STATE_NAN_TP;
+
     private static final int BRUSH_PREV[] = {
             R.drawable.brush_preview_spray,
             R.drawable.brush_preview_paint,
             R.drawable.brush_preview_pen
     };
 
+    private View menuContainer;
     private LinearLayout container;
     private GraffitiView graffitiView;
     private ArrayList<Bitmap> brushList = new ArrayList<>();
     private String bathroomId = null;
     private boolean isBrushesOpen = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +78,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
 
         container = (LinearLayout) findViewById(R.id.ll_brushes);
         graffitiView = (GraffitiView) findViewById(R.id.gv_grafitti);
+        menuContainer = findViewById(R.id.container_master);
 
         //Load the bathroom Id if it is saved
         if(bathroomId != null)
@@ -114,9 +123,49 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
             float translate = brushPreviewSize + brushMargin * (BRUSH_PREV.length-i);
             button.setTranslationX(translate);
             button.setAlpha(0f);
-            container.addView(button, lp);
+            container.addView(button, 0, lp);
         }
         graffitiView.setBrushList(brushList);
+
+        graffitiView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        if(currentFadingState != STATE_FADING) {
+                            currentFadingState = STATE_FADING;
+                            menuContainer.animate().cancel();
+                            menuContainer.animate()
+                                    .alpha(.4f)
+                                    .setDuration(200)
+                                    .withEndAction(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            currentFadingState = STATE_NAN_TP;
+                                        }
+                                    }).start();
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        if(currentFadingState != STATE_REVEALING) {
+                            currentFadingState = STATE_REVEALING;
+                            menuContainer.animate().cancel();
+                            menuContainer.animate()
+                                    .alpha(1f)
+                                    .setDuration(200)
+                                    .withEndAction(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            currentFadingState = STATE_NAN_TP;
+                                        }
+                                    }).start();
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     private void loadBitmap() {
@@ -193,22 +242,32 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void onOk(AmbilWarnaDialog dialog, int color) {
                             graffitiView.setColor(color);
-                            findViewById(R.id.btn_color).setBackgroundTintList(
-                                    new ColorStateList(
-                                            new int[][] {
-                                                    new int[] { android.R.attr.state_enabled}, // enabled
-                                                    new int[] {-android.R.attr.state_enabled}, // disabled
-                                                    new int[] {-android.R.attr.state_checked}, // unchecked
-                                                    new int[] { android.R.attr.state_pressed}  // pressed
-                                            },
-                                            new int[] {
-                                                    color,
-                                                    color,
-                                                    color,
-                                                    color
-                                            }
-                                    )
-                            );
+                            final View colorButton = findViewById(R.id.btn_color);
+                            ValueAnimator animator = ObjectAnimator.ofArgb(graffitiView.getCurrentColor(), color);
+                            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animation) {
+                                    int value = (Integer) animation.getAnimatedValue();
+                                    colorButton.setBackgroundTintList(
+                                            new ColorStateList(
+                                                    new int[][] {
+                                                            new int[] { android.R.attr.state_enabled}, // enabled
+                                                            new int[] {-android.R.attr.state_enabled}, // disabled
+                                                            new int[] {-android.R.attr.state_checked}, // unchecked
+                                                            new int[] { android.R.attr.state_pressed}  // pressed
+                                                    },
+                                                    new int[] {
+                                                            value,
+                                                            value,
+                                                            value,
+                                                            value
+                                                    }
+                                            )
+                                    );
+                                }
+                            });
+                            animator.setDuration(getResources().getInteger(R.integer.duration_animation_transition));
+                            animator.start();
                         }
                     }).show();
                     break;
@@ -225,17 +284,20 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         isBrushesOpen = shouldOpen;
         ViewGroup viewGroup = (ViewGroup) findViewById(R.id.ll_brushes);
         int marginLeft = getResources().getDimensionPixelOffset(R.dimen.brush_preview_margin);
-        for(int i=0; i<viewGroup.getChildCount(); i++){
+        int duration = getResources().getInteger(R.integer.duration_animation_translation);
+        for(int i=0; i<viewGroup.getChildCount()-1; i++){
             View view = viewGroup.getChildAt(i);
             float translateX = view.getMeasuredWidth() + marginLeft * (viewGroup.getChildCount()-i);
             view.animate().cancel();
             view.animate()
                     .translationX(shouldOpen?0:translateX)
-                    .alpha(shouldOpen?1:0)
-                    .setDuration(200)
-                    .setStartDelay(100*i)
+                    .alpha(shouldOpen ? 1 : 0)
+                    .setDuration(duration)
+                    .setStartDelay(duration / 2 * i)
                     .setInterpolator(new AccelerateDecelerateInterpolator())
                     .start();
         }
     }
+
+
 }
