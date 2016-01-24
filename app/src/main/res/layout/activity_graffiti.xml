@@ -15,25 +15,103 @@
         android:layout_height="match_parent"
         />
 
+    <!-- ALLLLLLL of the Buttonsssss-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="bottom|end"
         android:gravity="top|end"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/brush_preview_margin"
+        android:orientation="vertical"
         >
-        <!--Brushes-->
+
+        <!-- Your Brushes-->
         <LinearLayout
-            android:id="@+id/ll_brushes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/brush_preview_margin">
+
+            <!--Brushes-->
+            <LinearLayout
+                android:id="@+id/ll_brushes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"/>
+
+            <!-- Expand Brushes Icon-->
+            <ImageButton
+                android:id="@+id/btn_brush"
+                android:layout_width="@dimen/brush_preview_size"
+                android:layout_height="@dimen/brush_preview_size"
+                android:contentDescription="@null"
+                android:layout_marginLeft="@dimen/brush_preview_margin"
+                android:background="@drawable/bkgrnd_fab"
+                android:tint="@android:color/white"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_brush"
+                android:padding="12dp"
+                android:onClick="onClick"
+                />
+        </LinearLayout>
 
         <ImageButton
-            android:layout_width="@dimen/btn_brush_size"
-            android:layout_height="@dimen/btn_brush_size"
+            android:id="@+id/btn_clear"
+            android:layout_width="@dimen/brush_preview_size"
+            android:layout_height="@dimen/brush_preview_size"
             android:contentDescription="@null"
+            android:layout_marginLeft="@dimen/brush_preview_margin"
+            android:background="@drawable/bkgrnd_fab"
+            android:tint="@android:color/white"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_clear"
+            android:padding="10dp"
+            android:layout_marginBottom="@dimen/brush_preview_margin"
+            android:onClick="onClick"
+            />
+
+        <ImageButton
+            android:id="@+id/btn_undo"
+            android:layout_width="@dimen/brush_preview_size"
+            android:layout_height="@dimen/brush_preview_size"
+            android:contentDescription="@null"
+            android:layout_marginLeft="@dimen/brush_preview_margin"
+            android:layout_marginBottom="@dimen/brush_preview_margin"
+            android:background="@drawable/bkgrnd_fab"
+            android:tint="@android:color/white"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_undo"
+            android:padding="12dp"
+            android:onClick="onClick"
+            />
+
+        <ImageButton
+            android:id="@+id/btn_save"
+            android:layout_width="@dimen/brush_preview_size"
+            android:layout_height="@dimen/brush_preview_size"
+            android:contentDescription="@null"
+            android:layout_marginLeft="@dimen/brush_preview_margin"
+            android:layout_marginBottom="@dimen/brush_preview_margin"
+            android:background="@drawable/bkgrnd_fab"
+            android:tint="@android:color/white"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_save"
+            android:padding="15dp"
+            android:onClick="onClick"
+            />
+
+        <View
+            android:id="@+id/btn_color"
+            android:layout_width="@dimen/brush_preview_size"
+            android:layout_height="@dimen/brush_preview_size"
+            android:contentDescription="@null"
+            android:layout_marginLeft="@dimen/brush_preview_margin"
+            android:background="@drawable/bkgrnd_fab"
+            android:backgroundTint="@android:color/black"
+            android:layout_marginBottom="@dimen/brush_preview_margin"
+            android:onClick="onClick"
             />
 
     </LinearLayout>
