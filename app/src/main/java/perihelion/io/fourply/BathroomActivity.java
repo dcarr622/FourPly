@@ -90,6 +90,15 @@ public class BathroomActivity extends AppCompatActivity {
             }
         });
 
+        //Setup the Fab
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BathroomActivity.this, ARGraffitiActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -130,19 +139,6 @@ public class BathroomActivity extends AppCompatActivity {
 
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(bathroom.getDescription());
-
-        //Setup the Fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bathroomfab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment dialogFragment = ReviewFragment.createInstance(bathroom);
-                FragmentTransaction manager = getFragmentManager().beginTransaction();
-                manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                dialogFragment.show(manager, "Review");
-            }
-        });
-
     }
 
     @Override
