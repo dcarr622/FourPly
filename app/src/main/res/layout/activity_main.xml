@@ -43,7 +43,8 @@
                     android:elevation="4dp"
                     android:layout_margin="16dp"
                     android:background="@drawable/fab_fourply"
-                    android:layout_gravity="top|start"/>
+                    android:layout_gravity="top|start"
+                    android:visibility="visible"/>
 
             </FrameLayout>
 

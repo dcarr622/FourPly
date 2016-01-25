@@ -47,7 +47,8 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
     private static final String KEY_OBJECT_ID = "id";
     private static final int BRUSH_RES[] = {
             R.drawable.brush_spray,
-            R.drawable.brush_paint
+            R.drawable.brush_paint,
+            R.drawable.brush_nil
     };
 
     private static final int STATE_NAN_TP = -1;
@@ -58,6 +59,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
     private static final int BRUSH_PREV[] = {
             R.drawable.brush_preview_spray,
             R.drawable.brush_preview_paint,
+            R.drawable.brush_preview_nil,
             R.drawable.brush_preview_pen
     };
 
@@ -124,8 +126,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
                     brushPreviewSize,
                     brushPreviewSize);
 
-            lp.setMargins(brushMargin, 0, 0, 0);
-            lp.setMarginStart(brushMargin);
+            lp.leftMargin = brushMargin;
             button.setLayoutParams(lp);
 
             float translate = brushPreviewSize + brushMargin * (BRUSH_PREV.length-i);
@@ -135,7 +136,7 @@ public class GraffitiActivity extends AppCompatActivity implements View.OnClickL
         }
         graffitiView.setBrushList(brushList);
         graffitiView.setOnTouchListener(graffitiTouchListener);
-        }
+    }
 
     private void loadBitmap() {
         FileInputStream in = null;

@@ -49,7 +49,7 @@ public class BathroomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.name.setText(bathroom.getName());
         holder.description.setText(bathroom.getDescription());
         holder.rating.setRating(bathroom.getAverageReview());
-        Picasso.with(mActivity).load(bathroom.getHeroImage()).into(holder.heroImage);
+        Picasso.with(mActivity).load(bathroom.getHeroImage()).fit().into(holder.heroImage);
     }
 
     @Override
