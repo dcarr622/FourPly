@@ -1,3 +1,5 @@
+app/.externalNativeBuild
+
 *.iml
 .gradle
 /local.properties
