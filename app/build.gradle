@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "perihelion.io.fourply"
@@ -13,8 +13,6 @@ android {
     }
     buildTypes {
         release {
-            buildConfigField("String", "PARSE_APPLICATION_ID", PARSE_APPLICATION_ID)
-            buildConfigField("String", "PARSE_CLIENT_KEY", PARSE_CLIENT_KEY)
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -37,7 +35,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.parse:parse-android:1.12.0'
+
+    compile 'com.parse.bolts:bolts-android:1.4.0'
+    compile 'com.parse:parse-android:1.15.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0' // for logging API calls to LogCat
+
     compile 'com.android.support:design:23.1.1'
     compile 'com.firebase:firebase-client-android:2.5.0'
     compile 'com.squareup.picasso:picasso:2.5.2'

@@ -150,12 +150,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void done(List<Bathroom> bathrooms, ParseException exception) {
                 BathroomListAdapter adapter = new BathroomListAdapter(MainActivity.this, mRecyclerView, bathrooms);
                 mRecyclerView.setAdapter(adapter);
-                for (Bathroom bathroom: bathrooms) {
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
-                            .title(bathroom.getName())
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
-                    mBathroomMarkers.put(marker, bathroom);
+                if (bathrooms != null) {
+                    for (Bathroom bathroom : bathrooms) {
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(bathroom.getLat(), bathroom.getLng()))
+                                .title(bathroom.getName())
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                        mBathroomMarkers.put(marker, bathroom);
+                    }
                 }
             }
         });
